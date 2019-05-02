@@ -1,0 +1,64 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/main.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Sprites/cursor.png" type="Texture" id=4]
+
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 10, 500 )
+
+[node name="main" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="pointer" type="Position2D" parent="."]
+editor/display_folded = true
+position = Vector2( 468.895, 497.539 )
+z_index = 64
+
+[node name="Sprite" type="Sprite" parent="pointer"]
+modulate = Color( 1, 1, 1, 0.509804 )
+position = Vector2( -0.060791, -53.2545 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 2 )
+
+[node name="units" type="Node2D" parent="."]
+editor/display_folded = true
+z_index = 16
+
+[node name="unit" parent="units" instance=ExtResource( 3 )]
+position = Vector2( 468.895, 497.539 )
+
+[node name="unit2" parent="units" instance=ExtResource( 3 )]
+position = Vector2( 661.555, 425.365 )
+
+[node name="unit3" parent="units" instance=ExtResource( 3 )]
+position = Vector2( 333.874, 500.533 )
+
+[node name="cursor" type="Sprite" parent="."]
+position = Vector2( 987.101, 95.7635 )
+scale = Vector2( 0.3, 0.3 )
+z_index = 8
+texture = ExtResource( 4 )
+
+[node name="walls" type="StaticBody2D" parent="."]
+position = Vector2( 538.245, 412.156 )
+
+[node name="left" type="CollisionShape2D" parent="walls"]
+position = Vector2( -295.201, -107.47 )
+shape = SubResource( 1 )
+
+[node name="right" type="CollisionShape2D" parent="walls"]
+position = Vector2( 284.318, -130.596 )
+shape = SubResource( 1 )
+
+[node name="Polygon2D2" type="Polygon2D" parent="."]
+position = Vector2( 1260.2, -123.124 )
+color = Color( 0, 0.372549, 0.0745098, 1 )
+polygon = PoolVector2Array( -445.169, -106.633, -4.26453, -35.4001, -1.64908, 975.228, -441.829, 922.199 )
+
+[node name="Polygon2D3" type="Polygon2D" parent="."]
+position = Vector2( 250.963, -175.203 )
+color = Color( 0, 0.372549, 0.0745098, 1 )
+polygon = PoolVector2Array( -445.169, -106.633, -4.26453, -35.4001, -1.64908, 975.228, -441.829, 922.199 )
