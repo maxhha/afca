@@ -3,11 +3,11 @@
 [ext_resource path="res://Scenes/unit.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/solder.png" type="Texture" id=2]
 
-
 [sub_resource type="CircleShape2D" id=1]
 radius = 25.5478
 
 [node name="unit" type="KinematicBody2D"]
+rotation = -2.43299
 collision_layer = 2
 script = ExtResource( 1 )
 

@@ -4,10 +4,7 @@
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/cursor.png" type="Texture" id=4]
-
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 10, 500 )
+[ext_resource path="res://Scenes/camera_control.gd" type="Script" id=5]
 
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
@@ -42,23 +39,13 @@ scale = Vector2( 0.3, 0.3 )
 z_index = 8
 texture = ExtResource( 4 )
 
-[node name="walls" type="StaticBody2D" parent="."]
-position = Vector2( 538.245, 412.156 )
+[node name="camera_control" type="Node2D" parent="."]
+position = Vector2( 515.12, 298.875 )
+script = ExtResource( 5 )
 
-[node name="left" type="CollisionShape2D" parent="walls"]
-position = Vector2( -295.201, -107.47 )
-shape = SubResource( 1 )
-
-[node name="right" type="CollisionShape2D" parent="walls"]
-position = Vector2( 284.318, -130.596 )
-shape = SubResource( 1 )
-
-[node name="Polygon2D2" type="Polygon2D" parent="."]
-position = Vector2( 1260.2, -123.124 )
-color = Color( 0, 0.372549, 0.0745098, 1 )
-polygon = PoolVector2Array( -445.169, -106.633, -4.26453, -35.4001, -1.64908, 975.228, -441.829, 922.199 )
-
-[node name="Polygon2D3" type="Polygon2D" parent="."]
-position = Vector2( 250.963, -175.203 )
-color = Color( 0, 0.372549, 0.0745098, 1 )
-polygon = PoolVector2Array( -445.169, -106.633, -4.26453, -35.4001, -1.64908, 975.228, -441.829, 922.199 )
+[node name="Camera2D" type="Camera2D" parent="camera_control"]
+current = true
+drag_margin_left = 0.0
+drag_margin_top = 0.0
+drag_margin_right = 0.0
+drag_margin_bottom = 0.0

@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const MOVE_SPEED = 200
+const MOVE_SPEED = 400
 const MIN_SPEED = 0.4
 
 enum STATES{STAND, MOVE}
@@ -9,6 +9,9 @@ var STATE = STATES.STAND
 var linear_vel = Vector2()
 
 var _target = Vector2()
+
+func _ready():
+	rotation = PI / 4 * ( - 3 + randf() * 2)
 
 func _physics_process(delta):
 	
