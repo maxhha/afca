@@ -1,7 +1,18 @@
 extends StaticBody2D
 
+var size
 var finish_points 
 var start_points 
+
+func create(connect_points, props):
+	generate(props.get("size"),
+		props.get("min_border_size", 1),
+		props.get("width", 80),
+		props.get("rand_delta", 0),
+		connect_points,
+		null,
+		props.get("count_points", 6)
+		)
 
 func generate(
 		size : Vector2,
@@ -113,10 +124,12 @@ func generate(
 		min_x = left[left.size() - 1 - i].x + width
 		
 		var np = pos + (randf() * 2 - 1) * rand_delta
-		while np < min_x or np > max_x:
+		var j = 0
+		while (np < min_x or np > max_x) and j < 100:
 			np = pos + (randf() * 2 - 1) * rand_delta
+			j += 1
 		
-		pos = np
+		pos = clamp(np, min_x, max_x)
 		var k = 1 - float(i) / (count_points - 1)
 		right[right.size() - 1 - i].x += pos*k
 	
@@ -127,3 +140,10 @@ func generate(
 	
 	self.finish_points = finish_points
 	self.start_points = start_points
+	self.size = size
+
+func has_point(p):
+	return (p.x >= global_position.x 
+		and p.y >= global_position.y
+		and p.x < global_position.x + size.x
+		and p.y < global_position.y + size.y)

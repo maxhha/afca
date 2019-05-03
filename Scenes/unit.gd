@@ -38,4 +38,4 @@ func can_move():
 	return STATE == STATES.STAND
 	
 func is_free_move_to(p):
-	return not test_move(transform, p - global_position)
+	return not test_move(transform, p - global_position, false)
