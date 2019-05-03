@@ -1,10 +1,10 @@
 extends Node2D
 
-var _border_types = {}
+var _chunk_types = {}
 var _connect_points = null
 
-var _border_classes = {
-	"generated": preload("res://Scenes/generated_borders.tscn")
+var _chunk_classes = {
+	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn")
 }
 
 onready var player_units = $units.get_children()
@@ -15,9 +15,9 @@ onready var pointer = $pointer
 var current = 0
 var current_unit = null
 
-var walls = []
-var current_borders = null
-var current_borders_i = 0
+var chunks = []
+var current_chunk = null
+var current_chunk_i = 0
 
 func _ready():
 	randomize()
@@ -26,22 +26,27 @@ func _ready():
 	var border_size = 128
 	var normal_size = get_viewport_rect().size
 	
-	$walls.position.x = -border_size
+	$chunks.position.x = -border_size
 	
-	var t = {"class": "generated"}
+	var t = {"class": "gen_forest"}
 	t["min_border_size"] = border_size
 	t["size"] = normal_size + Vector2(1, 0)*border_size*2
-	t["width"] = t["size"].x / 8
+	t["width"] = t["size"].x / 7
 	t["rand_delta"] = 50
 	
-	_border_types["gen1"] = t
+	_chunk_types["forest_road"] = t
+	
+	t = _chunk_types["forest_road"].duplicate()
+	t["min_n_trunk"] = 0
+	t["max_n_trunk"] = 3
+	_chunk_types["free_forest"] = t
 	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
-	walls.append(create_borders('gen1'))
-	current_borders = walls[0]
-	walls[0].position.y = 0
-	walls.append(create_borders('gen1'))
+	chunks.append(create_chunk('forest_road'))
+	current_chunk = chunks[0]
+	chunks[0].position.y = 0
+	chunks.append(create_chunk('free_forest'))
 
 func next_unit():
 	current = (1 + current) % len(player_units)
@@ -50,9 +55,10 @@ func next_unit():
 
 func _process(delta):
 	unit_control_process(delta)
-	walls_generator_update()
+	chunks_generator_update()
 		
 
+# warning-ignore:unused_argument
 func unit_control_process(delta):
 	pointer.global_position = current_unit.global_position
 	cursor.global_position = get_global_mouse_position()
@@ -70,28 +76,29 @@ func unit_control_process(delta):
 	else:
 		 $cursor.modulate.a = 0
 
-func walls_generator_update():
-	if not (current_borders and current_borders.has_point($camera_control.global_position)):
+func chunks_generator_update():
+	if not (current_chunk and current_chunk.has_point($camera_control.global_position)):
 		
-		var next_i = current_borders_i + sign(current_borders.global_position.y - $camera_control.global_position.y)
+		var next_i = current_chunk_i + sign(current_chunk.global_position.y - $camera_control.global_position.y)
 		
-		if next_i+1 == walls.size():
-			walls.append(create_borders("gen1", walls[walls.size() - 1].position.y))
+		if next_i+1 == chunks.size():
+			chunks.append(create_chunk("free_forest", chunks[chunks.size() - 1].position.y))
 			
-			
 		
-		current_borders_i = next_i
-		current_borders = walls[current_borders_i]
+		current_chunk_i = next_i
+		current_chunk = chunks[current_chunk_i]
 
-func create_borders(type, base_y=0):
-	var t = _border_types[type]
-	var g = _border_classes[t["class"]].instance()
+func create_chunk(type, base_y=0):
+	var t = _chunk_types[type]
+	var g = _chunk_classes[t["class"]].instance()
+	
 	g.create(_connect_points, t)
+	$chunks.add_child(g)
 	
 	_connect_points = g.finish_points
 		
-	$walls.add_child(g)
 	g.position.y = base_y-g.size.y
+	
 	return g
 
 onready var wall_check_ray = $wall_check

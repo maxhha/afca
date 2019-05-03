@@ -27,7 +27,13 @@ click={
  ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="walls"
+2d_physics/layer_2="units"
+2d_physics/layer_3="hide_area"
+
 [rendering]
 
-environment/default_clear_color=Color( 0.345098, 0.223529, 0, 1 )
+environment/default_clear_color=Color( 0.470588, 0.423529, 0.615686, 1 )
 environment/default_environment="res://default_env.tres"

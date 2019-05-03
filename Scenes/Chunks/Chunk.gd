@@ -1,20 +1,20 @@
 extends StaticBody2D
 
+const DARK_COLOR = Color("000F0F")
+const GRADIENT_SIZE = 128
+const GRADIENT_Z_INDEX = 1024
+
 var size
 var finish_points 
 var start_points 
+var count_points 
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func create(connect_points, props):
-	generate(props.get("size"),
-		props.get("min_border_size", 1),
-		props.get("width", 80),
-		props.get("rand_delta", 0),
-		connect_points,
-		null,
-		props.get("count_points", 6)
-		)
+	pass
 
-func generate(
+func generate_borders(
 		size : Vector2,
 		min_border_size : float,
 		width : float,
@@ -133,14 +133,55 @@ func generate(
 		var k = 1 - float(i) / (count_points - 1)
 		right[right.size() - 1 - i].x += pos*k
 	
-	$p_left.polygon = left
 	$left.polygon = left
-	$p_right.polygon = right
 	$right.polygon = right
 	
+	self.count_points = count_points
 	self.finish_points = finish_points
 	self.start_points = start_points
 	self.size = size
+
+func add_shadows(z_index=GRADIENT_Z_INDEX):
+	
+	var left = $left.polygon
+	var right = $right.polygon
+	
+	var c0 = Color(0,0,0,0)
+	var c1 = DARK_COLOR
+	
+	var c_pool = PoolColorArray([c1, c1, c0, c0, c1, c1])
+	
+	for i in range(count_points-1):
+		# left side
+		var pol = Polygon2D.new()
+		
+		pol.polygon = PoolVector2Array([
+			Vector2(0, left[2 + i].y),
+			Vector2(left[2 + i].x - GRADIENT_SIZE, left[2 + i].y),
+			Vector2(left[2 + i].x, left[2 + i].y),
+			Vector2(left[3 + i].x, left[3 + i].y),
+			Vector2(left[3 + i].x - GRADIENT_SIZE, left[3 + i].y),
+			Vector2(0, left[3 + i].y) 
+		])
+		pol.vertex_colors = c_pool
+		pol.z_index = z_index
+		add_child(pol)
+		
+		# right side
+		pol = Polygon2D.new()
+		pol.polygon = PoolVector2Array([
+			Vector2(size.x, right[2 + i].y),
+			Vector2(right[2 + i].x + GRADIENT_SIZE, right[2 + i].y),
+			Vector2(right[2 + i].x, right[2 + i].y),
+			Vector2(right[3 + i].x, right[3 + i].y),
+			Vector2(right[3 + i].x + GRADIENT_SIZE, right[3 + i].y),
+			Vector2(size.x, right[3 + i].y) 
+		])
+		
+		pol.vertex_colors = c_pool
+		pol.z_index = z_index
+		add_child(pol)
+	
 
 func has_point(p):
 	return (p.x >= global_position.x 

@@ -1,31 +1,33 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/cursor.png" type="Texture" id=4]
 [ext_resource path="res://Scenes/camera_control.gd" type="Script" id=5]
+[ext_resource path="res://Sprites/solder.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/trunk.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/barrel_top.png" type="Texture" id=8]
 
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
 
 [node name="pointer" type="Position2D" parent="."]
-editor/display_folded = true
 position = Vector2( 468.895, 497.539 )
 z_index = 64
 
 [node name="Sprite" type="Sprite" parent="pointer"]
+visible = false
 modulate = Color( 1, 1, 1, 0.509804 )
 position = Vector2( -0.060791, -53.2545 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="units" type="Node2D" parent="."]
-editor/display_folded = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 468.895, 497.539 )
+position = Vector2( 515.687, 472.985 )
 
 [node name="unit2" parent="units" instance=ExtResource( 3 )]
 position = Vector2( 661.555, 425.365 )
@@ -54,4 +56,20 @@ drag_margin_bottom = 0.0
 [node name="wall_check" type="RayCast2D" parent="."]
 exclude_parent = false
 
-[node name="walls" type="Node2D" parent="."]
+[node name="chunks" type="Node2D" parent="."]
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 306.148, 410.691 )
+
+[node name="solder" type="Sprite" parent="."]
+position = Vector2( -727.95, 317.456 )
+scale = Vector2( 0.333, 0.333 )
+texture = ExtResource( 6 )
+
+[node name="trunk2" type="Sprite" parent="."]
+position = Vector2( -665.931, 204.856 )
+texture = ExtResource( 7 )
+
+[node name="barrel_top" type="Sprite" parent="."]
+position = Vector2( -600, 320 )
+texture = ExtResource( 8 )

@@ -8,6 +8,7 @@ var direction = -1
 func _ready():
 	offset.y = get_viewport_rect().size.y/4
 
+# warning-ignore:unused_argument
 func _process(delta):
 	if units.get_child_count() > 0:
 		var target = Vector2()
