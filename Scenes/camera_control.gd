@@ -15,9 +15,10 @@ func _process(delta):
 		
 		for u in units.get_children():
 			target += u.global_position
-		
-		var y = (target / units.get_child_count() + offset*direction).y
+		var p = (target / units.get_child_count() + offset*direction)
+		var y = p.y
 		if direction >= 0:
 			global_position.y = max(y, global_position.y)
 		else:
 			global_position.y = min(y, global_position.y)
+		global_position.x = p.x

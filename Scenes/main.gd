@@ -23,8 +23,9 @@ func _ready():
 	randomize()
 	current_unit = player_units[current]
 	
-	var border_size = 128
 	var normal_size = get_viewport_rect().size
+	var border_size = 512
+	
 	
 	$chunks.position.x = -border_size
 	
@@ -47,6 +48,14 @@ func _ready():
 	current_chunk = chunks[0]
 	chunks[0].position.y = 0
 	chunks.append(create_chunk('free_forest'))
+	
+	get_tree().connect("screen_resized", self, "_on_screen_resize")
+
+func _on_screen_resize():
+	var normal_s = Vector2(1024, 600)
+	var new_s = get_viewport_rect().size
+	var k = 1 / max(new_s.x / normal_s.x, new_s.y / normal_s.y) - 1
+	$camera_control/camera.zoom = Vector2.ONE * (abs(k)*0.5*sign(k) + 1)
 
 func next_unit():
 	current = (1 + current) % len(player_units)
@@ -91,9 +100,9 @@ func chunks_generator_update():
 func create_chunk(type, base_y=0):
 	var t = _chunk_types[type]
 	var g = _chunk_classes[t["class"]].instance()
-	
-	g.create(_connect_points, t)
 	$chunks.add_child(g)
+	g.create(_connect_points, t)
+	
 	
 	_connect_points = g.finish_points
 		

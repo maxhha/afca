@@ -1,9 +1,14 @@
 extends "res://Scenes/Chunks/Chunk.gd"
 
 var Trunk = preload("res://Scenes/trunk.tscn")
+var TreeFG = preload("res://Scenes/tree.tscn")
 const trunk_size = 160
+const tree_size = 75
+const WORK_TIME = 5000# usec
 
 func create(connect_points, props):
+	var TIME = OS.get_ticks_usec()
+	
 	generate_borders(props.get("size"),
 		props.get("min_border_size", 1),
 		props.get("width", 80),
@@ -16,18 +21,81 @@ func create(connect_points, props):
 	var count_points = props.get("count_points", 6)
 	var left = $left.polygon
 	var right = $right.polygon
+	#place borders forest
+	var poses = []
+	
+	var e = 0
+	while e < 200:
+		var p
+		while true:
+			p = Vector2(randf(), randf())*Vector2(size.x, count_points-1)
+			var b = _soft_get(left, p.y + 2)
+			if abs(b.x - GRADIENT_SIZE / 2.0 - p.x) <= GRADIENT_SIZE / 2.0:
+				p.y = b.y
+				break
+		
+		var matches = true
+		for t in poses:
+			if t.distance_to(p) <= tree_size * 2:
+				matches = false
+				break
+		 
+		if matches:
+			poses.append(p)
+			var t = TreeFG.instance()
+			add_child(t)
+			t.position = p
+			t.rotation = randf() * TAU
+		
+		if OS.get_ticks_usec() - TIME >= WORK_TIME:
+			yield(get_tree(), "idle_frame")
+			TIME = OS.get_ticks_usec()
+		
+		e += 1
+	
+	# repeat process to right side
+	poses = []
+	
+	e = 0
+	while e < 1000:
+		var p
+		while true:
+			p = Vector2(randf(), randf())*Vector2(size.x, count_points-1)
+			var b = _soft_get(right, p.y + 2)
+			if abs(b.x + GRADIENT_SIZE / 2.0 - p.x) <= GRADIENT_SIZE / 2.0:
+				p.y = b.y
+				break
+		
+		var matches = true
+		for t in poses:
+			if t.distance_to(p) <= tree_size * 2:
+				matches = false
+				break
+		 
+		if matches:
+			poses.append(p)
+			var t = TreeFG.instance()
+			add_child(t)
+			t.position = p
+			t.rotation = randf() * TAU
+		
+		if OS.get_ticks_usec() - TIME >= WORK_TIME:
+			yield(get_tree(), "idle_frame")
+			TIME = OS.get_ticks_usec()
+		
+		e += 1
+	
+	# place trunks
 	var count_trunks = int(rand_range(props.get("min_n_trunk", 0), props.get("max_n_trunk", 0)+1))
 	
 	var trunks = []
 	
 # warning-ignore:unused_variable
 	for i in range(count_trunks):
-		var n = Trunk.instance()
-		
 		var p_y 
 		var p_x 
 		
-		var e = 0
+		e = 0
 		
 		var matches = false
 		
@@ -48,15 +116,18 @@ func create(connect_points, props):
 						break
 				
 			e += 1
-			
-		if e >= 1000:
-			n.queue_free()
-			return
 		
+		if e >= 1000:
+			break
+		
+		var n = Trunk.instance()
 		add_child(n)
 		n.rotation = randf() * TAU
 		n.position = Vector2(p_x, p_y)
 		trunks.append(Vector2(p_x, p_y))
-
-func _soft_get(ar, i):
-	return (ar[int(i)] + ar[ceil(i)]) / 2
+		
+		if OS.get_ticks_usec() - TIME >= WORK_TIME:
+			yield(get_tree(), "idle_frame")
+			TIME = OS.get_ticks_usec()
+		
+	move_borders_to_shadow()

@@ -1,7 +1,7 @@
 extends StaticBody2D
 
 const DARK_COLOR = Color("000F0F")
-const GRADIENT_SIZE = 128
+const GRADIENT_SIZE = 256
 const GRADIENT_Z_INDEX = 1024
 
 var size
@@ -188,3 +188,19 @@ func has_point(p):
 		and p.y >= global_position.y
 		and p.x < global_position.x + size.x
 		and p.y < global_position.y + size.y)
+
+func _soft_get(ar, i):
+	var fi = int(i)
+	var ci = int(ceil(i))
+	if fi == ci:
+		return ar[fi]
+	else:
+		return ar[fi]*(i - fi) + ar[ci]*(ci - i)
+
+func move_borders_to_shadow():
+	var left = $left.polygon
+	var right = $right.polygon
+	
+	for i in range(count_points):
+		left[2+i].x -= GRADIENT_SIZE
+		right[2+i].x += GRADIENT_SIZE

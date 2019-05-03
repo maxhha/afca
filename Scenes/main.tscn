@@ -27,13 +27,13 @@ texture = ExtResource( 2 )
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 515.687, 472.985 )
+position = Vector2( 501.622, 235.643 )
 
 [node name="unit2" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 661.555, 425.365 )
+position = Vector2( 628.151, 242.524 )
 
 [node name="unit3" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 333.874, 500.533 )
+position = Vector2( 369.036, 231.546 )
 
 [node name="cursor" type="Sprite" parent="."]
 position = Vector2( 987.101, 95.7635 )
@@ -42,11 +42,10 @@ z_index = 8
 texture = ExtResource( 4 )
 
 [node name="camera_control" type="Node2D" parent="."]
-editor/display_folded = true
 position = Vector2( 515.12, 298.875 )
 script = ExtResource( 5 )
 
-[node name="Camera2D" type="Camera2D" parent="camera_control"]
+[node name="camera" type="Camera2D" parent="camera_control"]
 current = true
 drag_margin_left = 0.0
 drag_margin_top = 0.0
