@@ -204,3 +204,6 @@ func move_borders_to_shadow():
 	for i in range(count_points):
 		left[2+i].x -= GRADIENT_SIZE
 		right[2+i].x += GRADIENT_SIZE
+	
+	$left.polygon = left
+	$right.polygon = right

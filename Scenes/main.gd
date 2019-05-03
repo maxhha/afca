@@ -15,16 +15,27 @@ onready var pointer = $pointer
 var current = 0
 var current_unit = null
 
+const CHUNKS_BUFFER_SIZE = 5
 var chunks = []
 var current_chunk = null
 var current_chunk_i = 0
+var chunks_offset_i = 0
+
+var bg_grad_colors = [Color8(108, 157, 154), Color8(108, 132, 157), Color8(120, 108, 157)]
+
+var bg_grad = []
+var bg_grad_size = Vector2()
+var bg_grad_current = 0
+var bg_grad_offset_i = 0
 
 func _ready():
 	randomize()
 	current_unit = player_units[current]
 	
+	#set up chunks
 	var normal_size = get_viewport_rect().size
 	var border_size = 512
+	$bg.position.x = -border_size
 	
 	
 	$chunks.position.x = -border_size
@@ -49,8 +60,29 @@ func _ready():
 	chunks[0].position.y = 0
 	chunks.append(create_chunk('free_forest'))
 	
+	# bg grad setup
+	bg_grad_size = normal_size*Vector2(1, 2.2) + Vector2(1, 0)*border_size*2
+	for i in range(len(bg_grad_colors)):
+		bg_grad.append(create_bg_grad(i))
+	
+	
+# warning-ignore:return_value_discarded
 	get_tree().connect("screen_resized", self, "_on_screen_resize")
 
+
+func create_bg_grad(indx):
+	var p = Polygon2D.new()
+	$bg.add_child(p)
+	p.position.y = -indx*bg_grad_size.y
+	p.polygon = PoolVector2Array([
+		Vector2(0, 0), Vector2(0, bg_grad_size.y), bg_grad_size, Vector2(bg_grad_size.x, 0)
+	])
+	var c1 = bg_grad_colors[indx % len(bg_grad_colors)]
+	var c2 = bg_grad_colors[(indx + 1) % len(bg_grad_colors)]
+	p.vertex_colors = PoolColorArray([c2, c1, c1, c2])
+	return p
+
+	
 func _on_screen_resize():
 	var normal_s = Vector2(1024, 600)
 	var new_s = get_viewport_rect().size
@@ -65,7 +97,7 @@ func next_unit():
 func _process(delta):
 	unit_control_process(delta)
 	chunks_generator_update()
-		
+	bg_grad_update()
 
 # warning-ignore:unused_argument
 func unit_control_process(delta):
@@ -89,13 +121,35 @@ func chunks_generator_update():
 	if not (current_chunk and current_chunk.has_point($camera_control.global_position)):
 		
 		var next_i = current_chunk_i + sign(current_chunk.global_position.y - $camera_control.global_position.y)
+		next_i = int(next_i)
 		
-		if next_i+1 == chunks.size():
-			chunks.append(create_chunk("free_forest", chunks[chunks.size() - 1].position.y))
-			
+		
+		if next_i+1 == chunks.size() + chunks_offset_i:
+			var nn = next_i+1
+			if chunks.size() == CHUNKS_BUFFER_SIZE:
+				chunks[nn % CHUNKS_BUFFER_SIZE].queue_free()
+				chunks_offset_i += 1
+			else:
+				chunks.append(null)
+			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("free_forest", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
 		
 		current_chunk_i = next_i
-		current_chunk = chunks[current_chunk_i]
+		current_chunk = chunks[current_chunk_i % CHUNKS_BUFFER_SIZE]
+
+func bg_grad_update():
+	if abs($camera_control.global_position.y - (0.5-bg_grad_current)*bg_grad_size.y) >= bg_grad_size.y / 2:
+		var next_i = int(bg_grad_current + sign(- bg_grad_current*bg_grad_size.y - $camera_control.global_position.y))
+		if next_i-1 < bg_grad_offset_i:
+			var nn = next_i - 1
+			bg_grad_offset_i -= 1
+			bg_grad[nn % len(bg_grad_colors)].position.y = -nn*bg_grad_size.y
+		elif next_i+1 >= bg_grad_offset_i + len(bg_grad_colors):
+			var nn = next_i+1
+			bg_grad_offset_i += 1
+			bg_grad[nn % len(bg_grad_colors)].position.y = -nn*bg_grad_size.y
+			
+		bg_grad_current = next_i
+		
 
 func create_chunk(type, base_y=0):
 	var t = _chunk_types[type]
