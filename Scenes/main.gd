@@ -13,6 +13,8 @@ onready var player_units = $units.get_children()
 onready var cursor = $cursor
 onready var pointer = $pointer
 
+signal game_over
+
 var current = 0
 var current_unit = null
 
@@ -33,6 +35,9 @@ func _ready():
 	randomize()
 	current_unit = player_units[current]
 	global.player_units = player_units
+	
+	for p in player_units:
+		p.connect("dead", self, "_on_player_unit_death", [p])
 	
 	#set up chunks
 	var normal_size = get_viewport_rect().size
@@ -72,10 +77,28 @@ func _ready():
 	for i in range(len(bg_grad_colors)):
 		bg_grad.append(create_bg_grad(i))
 	
+	connect("game_over", self, '_on_game_over')
 	
 # warning-ignore:return_value_discarded
 	get_tree().connect("screen_resized", self, "_on_screen_resize")
 
+
+func _on_player_unit_death(p):
+	var i = player_units.find(p)
+	if current > i:
+		current -= 1
+	elif current == i:
+		next_unit()
+	player_units.erase(p)
+	
+	if player_units.size() == 0:
+		emit_signal("game_over")
+
+const GAMEOVER_TIME = 1.5
+var gameover_timer = 0
+
+func _on_game_over():
+	gameover_timer = GAMEOVER_TIME
 
 func create_bg_grad(indx):
 	var p = Polygon2D.new()
@@ -102,9 +125,16 @@ func next_unit():
 
 
 func _process(delta):
-	unit_control_process(delta)
+	if player_units.size() > 0:
+		unit_control_process(delta)
 	chunks_generator_update()
 	bg_grad_update()
+	
+	if gameover_timer > 0:
+		gameover_timer = max(gameover_timer - delta, 0)
+		$UI/white_screen.color.a = 1 - gameover_timer / GAMEOVER_TIME
+		if gameover_timer == 0:
+			get_tree().reload_current_scene()
 
 # warning-ignore:unused_argument
 func unit_control_process(delta):

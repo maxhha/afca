@@ -27,16 +27,20 @@ scale = Vector2( 0.15, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="units" type="Node2D" parent="."]
+editor/display_folded = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 3 )]
 position = Vector2( 501.622, 456.643 )
+rotation = -1.57079
 
 [node name="unit2" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 621.622, 429.643 )
+position = Vector2( 434.031, 469.783 )
+rotation = -2.35619
 
 [node name="unit3" parent="units" instance=ExtResource( 3 )]
-position = Vector2( 338.622, 466.643 )
+position = Vector2( 568.046, 469.398 )
+rotation = -0.785397
 
 [node name="cursor" type="Sprite" parent="."]
 position = Vector2( 987.101, 95.7635 )
@@ -80,6 +84,17 @@ texture = ExtResource( 8 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
-autoplay = true
 mix_target = 1
 bus = "Music"
+
+[node name="UI" type="CanvasLayer" parent="."]
+editor/display_folded = true
+
+[node name="white_screen" type="ColorRect" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -0.418091
+margin_top = -0.418152
+margin_right = -0.418091
+margin_bottom = -0.418152
+color = Color( 1, 1, 1, 0 )

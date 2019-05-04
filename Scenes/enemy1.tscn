@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/enemy_runner.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/solder.png" type="Texture" id=2]
+[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 25.5
@@ -21,6 +22,9 @@ void fragment(){
 render_priority = 1
 shader = SubResource( 5 )
 
+[sub_resource type="CircleShape2D" id=7]
+radius = 447.794
+
 [node name="enemy" type="KinematicBody2D" groups=[
 "unit",
 ]]
@@ -32,22 +36,13 @@ script = ExtResource( 1 )
 shape = SubResource( 3 )
 
 [node name="hide_area" type="Area2D" parent="."]
+editor/display_folded = true
 monitorable = false
 collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hide_area"]
 shape = SubResource( 4 )
-
-[node name="detect_shot" type="Area2D" parent="."]
-visible = false
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="detect_shot"]
-polygon = PoolVector2Array( 0, 0, 220, -115, 250, 0, 220, 115 )
-
-[node name="Polygon2D" type="Polygon2D" parent="detect_shot/CollisionPolygon2D"]
-color = Color( 1, 0.305882, 0.305882, 0.235294 )
-polygon = PoolVector2Array( 0.5425, -0.323296, 220.266, -115.073, 250.37, -0.926453, 220.684, 116.147 )
 
 [node name="sprite" type="Sprite" parent="."]
 modulate = Color( 1, 0.184314, 0.184314, 1 )
@@ -61,3 +56,18 @@ material = SubResource( 6 )
 rotation = 1.5708
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
+
+[node name="shoot1" parent="." instance=ExtResource( 3 )]
+
+[node name="ray_walls" type="RayCast2D" parent="."]
+collision_mask = 17
+
+[node name="view_area" type="Area2D" parent="."]
+editor/display_folded = true
+visible = false
+monitorable = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
+shape = SubResource( 7 )

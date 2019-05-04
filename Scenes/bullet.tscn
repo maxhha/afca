@@ -4,7 +4,7 @@
 [ext_resource path="res://Sprites/bullet.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 2.74574
+radius = 0.0732773
 
 [node name="bullet" type="KinematicBody2D"]
 z_index = 523

@@ -10,13 +10,23 @@ var STATE = STATES.STAND
 
 var linear_vel = Vector2()
 
+signal dead
+
+var health = 3 setget set_health
+
+func set_health(h):
+	health = h
+	if h <= 0:
+		emit_signal("dead")
+		queue_free()
+
 var _target
 var _targeting = false
 
 var timer = 0
 
-func _ready():
-	rotation = PI / 4 * ( - 3 + randf() * 2)
+#func _ready():
+#	rotation = PI / 4 * ( - 3 + randf() * 2)
 
 func _physics_process(delta):
 	
@@ -78,7 +88,7 @@ func can_move():
 func get_nearest_enemy():
 	var enemies = $view_area.get_overlapping_bodies()
 	if enemies.size() == 0:
-		return false
+		return null
 	
 	var d_min
 	var e_min
@@ -114,6 +124,9 @@ func start_attack(e):
 	get_parent().add_child(b)
 	b.global_position = global_position + Vector2(1,0).rotated(rotation)*20
 	$shoot1.play()
+
+func get_damage(dmg):
+	self.health -= dmg
 
 func is_free_move_to(p):
 	return not test_move(transform, p - global_position, false)
