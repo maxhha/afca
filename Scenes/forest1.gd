@@ -4,7 +4,7 @@ var Trunk = preload("res://Scenes/trunk.tscn")
 var TreeFG = preload("res://Scenes/tree.tscn")
 const trunk_size = 160
 const tree_size = 75
-const WORK_TIME = 5000# usec
+const WORK_TIME = 2000# usec
 
 func create(connect_points, finish_points, props, TREE):
 	var TIME = OS.get_ticks_usec()
@@ -18,7 +18,7 @@ func create(connect_points, finish_points, props, TREE):
 	var poses = []
 	
 	var e = 0
-	while e < 1000:
+	while e < 400:
 		var p
 		while true:
 			p = Vector2(randf(), randf())*Vector2(size.x, count_points-1)
@@ -43,6 +43,7 @@ func create(connect_points, finish_points, props, TREE):
 		if OS.get_ticks_usec() - TIME >= WORK_TIME:
 			yield(TREE, "idle_frame")
 			TIME = OS.get_ticks_usec()
+			
 
 		e += 1
 
@@ -50,7 +51,7 @@ func create(connect_points, finish_points, props, TREE):
 	poses = []
 
 	e = 0
-	while e < 1000:
+	while e < 400:
 		var p
 		while true:
 			p = Vector2(randf(), randf())*Vector2(size.x, count_points-1)

@@ -8,6 +8,9 @@ enum STATES {STAND, AIM}
 var STATE = STATES.STAND
 var timer = 0
 
+func _ready():
+	timer = randf() * STAND_TIME
+
 func _process(delta):
 	#logic
 	
@@ -32,10 +35,13 @@ func _process(delta):
 		STATES.STAND:
 			if is_hiding():
 				$sprite.modulate.a = 0.2
+				$detect_shot.hide()
 			else:
 				$sprite.modulate.a = 1
+				$detect_shot.show()
 		STATES.AIM:
 			$sprite.modulate.a = 1
+			$detect_shot.show()
 
 var hiding = false
 

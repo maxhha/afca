@@ -16,7 +16,7 @@ onready var pointer = $pointer
 var current = 0
 var current_unit = null
 
-const CHUNKS_BUFFER_SIZE = 5
+const CHUNKS_BUFFER_SIZE = 4
 var chunks = []
 var current_chunk = null
 var current_chunk_i = 0
@@ -32,6 +32,7 @@ var bg_grad_offset_i = 0
 func _ready():
 	randomize()
 	current_unit = player_units[current]
+	global.player_units = player_units
 	
 	#set up chunks
 	var normal_size = get_viewport_rect().size
@@ -111,7 +112,7 @@ func unit_control_process(delta):
 	cursor.global_position = get_global_mouse_position()
 	
 	if current_unit.can_move():
-		current_unit.look_at(cursor.global_position)
+		current_unit.look(cursor.global_position)
 		if current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position):
 			
 			$cursor.modulate.a = 1
@@ -137,7 +138,7 @@ func chunks_generator_update():
 				chunks_offset_i += 1
 			else:
 				chunks.append(null)
-			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("forest1", "free_forest", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
+			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("forest1", "forest_road", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
 		
 		current_chunk_i = next_i
 		current_chunk = chunks[current_chunk_i % CHUNKS_BUFFER_SIZE]

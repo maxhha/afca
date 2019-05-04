@@ -19,6 +19,10 @@ config/name="tactic-scroll"
 run/main_scene="res://Scenes/main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+global="*res://Scripts/global.gd"
+
 [input]
 
 click={
@@ -32,6 +36,8 @@ click={
 2d_physics/layer_1="walls"
 2d_physics/layer_2="units"
 2d_physics/layer_3="hide_area"
+2d_physics/layer_4="enemy"
+2d_physics/layer_5="obstacle"
 
 [rendering]
 

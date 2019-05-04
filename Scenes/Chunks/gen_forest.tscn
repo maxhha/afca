@@ -3,6 +3,7 @@
 [ext_resource path="res://Scenes/Chunks/gen_forest.gd" type="Script" id=1]
 
 [node name="walls" type="StaticBody2D"]
+collision_layer = 0
 script = ExtResource( 1 )
 
 [node name="left" type="CollisionPolygon2D" parent="."]

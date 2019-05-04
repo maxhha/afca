@@ -57,7 +57,7 @@ func create(connect_points, finish_points, props, TREE):
 	poses = []
 	
 	e = 0
-	while e < 1000:
+	while e < 200:
 		var p
 		while true:
 			p = Vector2(randf(), randf())*Vector2(size.x, count_points-1)
