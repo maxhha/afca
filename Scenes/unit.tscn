@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/unit.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/solder.png" type="Texture" id=2]
+[ext_resource path="res://Sound/shoot1.wav" type="AudioStream" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 25.5478
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 508.35
+
+[sub_resource type="AudioStreamRandomPitch" id=3]
+audio_stream = ExtResource( 3 )
 
 [node name="unit" type="KinematicBody2D"]
 collision_layer = 2
@@ -33,3 +37,8 @@ shape = SubResource( 2 )
 
 [node name="ray_walls" type="RayCast2D" parent="."]
 collision_mask = 17
+
+[node name="shoot1" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 3 )
+volume_db = -1.747
+bus = "Sound"

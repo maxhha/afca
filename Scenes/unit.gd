@@ -60,8 +60,6 @@ func _physics_process(delta):
 			elif linear_vel.length() >= MIN_SPEED:
 				rotation = linear_vel.angle()
 				_targeting = false
-		STATES.ATTACK:
-			modulate.a = 1 - timer / ATTACK_TIMEOUT
 
 func move_to(point):
 	_target = point
@@ -115,6 +113,7 @@ func start_attack(e):
 	var b = Bullet.instance().init(e.global_position - global_position, true)
 	get_parent().add_child(b)
 	b.global_position = global_position + Vector2(1,0).rotated(rotation)*20
+	$shoot1.play()
 
 func is_free_move_to(p):
 	return not test_move(transform, p - global_position, false)
