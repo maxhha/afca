@@ -7,11 +7,11 @@ const GRADIENT_Z_INDEX = 1024
 var size
 var finish_points 
 var start_points 
-var count_points 
+var count_points
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func create(connect_points, props):
+func create(connect_points, finish_points, props, tree):
 	pass
 
 func generate_borders(
@@ -156,12 +156,12 @@ func add_shadows(z_index=GRADIENT_Z_INDEX):
 		var pol = Polygon2D.new()
 		
 		pol.polygon = PoolVector2Array([
-			Vector2(0, left[2 + i].y),
+			Vector2(left[0].x, left[2 + i].y),
 			Vector2(left[2 + i].x - GRADIENT_SIZE, left[2 + i].y),
-			Vector2(left[2 + i].x, left[2 + i].y),
-			Vector2(left[3 + i].x, left[3 + i].y),
+			left[2 + i],
+			left[3 + i],
 			Vector2(left[3 + i].x - GRADIENT_SIZE, left[3 + i].y),
-			Vector2(0, left[3 + i].y) 
+			Vector2(left[0].x, left[3 + i].y)
 		])
 		pol.vertex_colors = c_pool
 		pol.z_index = z_index
@@ -170,12 +170,12 @@ func add_shadows(z_index=GRADIENT_Z_INDEX):
 		# right side
 		pol = Polygon2D.new()
 		pol.polygon = PoolVector2Array([
-			Vector2(size.x, right[2 + i].y),
+			Vector2(right[0].x, right[2 + i].y),
 			Vector2(right[2 + i].x + GRADIENT_SIZE, right[2 + i].y),
 			Vector2(right[2 + i].x, right[2 + i].y),
 			Vector2(right[3 + i].x, right[3 + i].y),
 			Vector2(right[3 + i].x + GRADIENT_SIZE, right[3 + i].y),
-			Vector2(size.x, right[3 + i].y) 
+			Vector2(right[0].x, right[3 + i].y)
 		])
 		
 		pol.vertex_colors = c_pool
@@ -207,3 +207,62 @@ func move_borders_to_shadow():
 	
 	$left.polygon = left
 	$right.polygon = right
+
+func prepeare_chunk(min_border_size):
+	var left = $left.polygon
+	var right = $right.polygon
+	assert(len(left) == len(right))
+	count_points = len(left)-2
+	
+	for i in range(len(left)):
+		left[i] += $left.position
+	
+	$left.position = Vector2()
+	
+	for i in range(len(right)):
+		right[i] += $right.position
+	
+	$right.position = Vector2()
+	
+	
+	var min_x = null
+	var max_x = null
+	for i in range(count_points):
+		if min_x == null or min_x > left[2+i].x:
+			min_x = left[2+i].x
+		if max_x == null or max_x < right[2+i].x:
+			max_x = right[2+i].x
+		right[2+i].y = left[2+i].y
+	
+	var d_x = min_border_size - min_x
+	for i in range(count_points):
+		left[2+i].x += d_x
+		right[2+i].x += d_x
+	
+	var d_x2 = min_border_size - (right[0].x - max_x) + d_x
+	
+	right[0].x += d_x2
+	right[1].x += d_x2
+	
+	for n in get_children():
+		if not n.name in ['left', 'right']:
+			n.position.x += d_x
+	
+	$left.polygon = left
+	$right.polygon = right
+	
+	finish_points = [left[len(left)-1].x,right[len(right)-1].x]
+	start_points = [left[2].x,right[2].x]
+	size = right[1]
+
+func connect_chunk(connect_points, border_size):
+	
+	var left = $left.polygon
+	var right = $right.polygon
+	var this_points = [left[2].x, right[2].x]
+	if connect_points == null:
+		connect_points = this_points
+	
+	assert(this_points[1] - this_points[0]  == connect_points[1] - connect_points[0])
+	
+	

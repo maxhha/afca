@@ -4,7 +4,8 @@ var _chunk_types = {}
 var _connect_points = null
 
 var _chunk_classes = {
-	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn")
+	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn"),
+	"forest1": preload("res://Scenes/Chunks/forest1.tscn")
 }
 
 onready var player_units = $units.get_children()
@@ -53,12 +54,17 @@ func _ready():
 	t["max_n_trunk"] = 3
 	_chunk_types["free_forest"] = t
 	
+	t = {'class':'forest1'}
+	t["min_border_size"] = border_size
+	
+	_chunk_types["forest1"] = t
+	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
-	chunks.append(create_chunk('forest_road'))
+	chunks.append(create_chunk('forest_road', 'forest_road'))
 	current_chunk = chunks[0]
 	chunks[0].position.y = 0
-	chunks.append(create_chunk('free_forest'))
+	chunks.append(create_chunk('free_forest', 'forest_road'))
 	
 	# bg grad setup
 	bg_grad_size = normal_size*Vector2(1, 2.2) + Vector2(1, 0)*border_size*2
@@ -131,7 +137,7 @@ func chunks_generator_update():
 				chunks_offset_i += 1
 			else:
 				chunks.append(null)
-			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("free_forest", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
+			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("forest1", "free_forest", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
 		
 		current_chunk_i = next_i
 		current_chunk = chunks[current_chunk_i % CHUNKS_BUFFER_SIZE]
@@ -151,18 +157,29 @@ func bg_grad_update():
 		bg_grad_current = next_i
 		
 
-func create_chunk(type, base_y=0):
-	var t = _chunk_types[type]
-	var g = _chunk_classes[t["class"]].instance()
-	$chunks.add_child(g)
-	g.create(_connect_points, t)
-	
-	
-	_connect_points = g.finish_points
+var _chunk_queue = []
+
+func create_chunk(type, fallback_type, base_y=0, finish_points=null):
+	if finish_points == null and _chunk_queue.size() > 0:
+		var g = _chunk_queue[0]
+		if _connect_points[0] == g.start_points[0] and _connect_points[1] == g.start_points[1]:
+			_chunk_queue.remove(0)
+			_connect_points = g.finish_points
+			$chunks.add_child(g)
+			g.position.y = base_y-g.size.y
+			
+			return g
+		else:
+			return create_chunk(fallback_type, fallback_type, base_y, g.start_points)
+	else:
+		var t = _chunk_types[type]
+		var g = _chunk_classes[t["class"]].instance()
 		
-	g.position.y = base_y-g.size.y
+		g.create(_connect_points, finish_points, t, get_tree())
+		
+		_chunk_queue.insert(0, g)
+		return create_chunk(type, fallback_type, base_y)
 	
-	return g
 
 onready var wall_check_ray = $wall_check
 
