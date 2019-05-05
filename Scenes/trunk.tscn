@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/trunk.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/trunk.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/glow.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/hide_area.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/position.png" type="Texture" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 99.0179, 15.2079 )
 
-[node name="trunk" type="KinematicBody2D"]
+[node name="trunk" type="KinematicBody2D" groups=[
+"obstacle",
+]]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource( 1 )
@@ -36,6 +40,7 @@ position = Vector2( 0.800079, -11.8202 )
 monitoring = false
 collision_layer = 4
 collision_mask = 0
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hide"]
 position = Vector2( 0.642517, 48.2442 )
@@ -47,30 +52,34 @@ position = Vector2( -11.4581, -13.4461 )
 rotation = -0.16303
 shape = SubResource( 1 )
 
-[node name="unit_poses" type="Node2D" parent="."]
-editor/display_folded = true
+[node name="unit_poses" type="Node2D" parent="hide"]
 
-[node name="p0" type="Position2D" parent="unit_poses"]
-position = Vector2( 49.6929, -41.1441 )
+[node name="position" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( 63.8505, 34.8741 )
+rotation = 1.55192
+texture = ExtResource( 5 )
 
-[node name="p5" type="Position2D" parent="unit_poses"]
-position = Vector2( 63.6048, 25.5039 )
+[node name="position2" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -4.006, 37.9441 )
+rotation = 1.40838
+texture = ExtResource( 5 )
 
-[node name="p1" type="Position2D" parent="unit_poses"]
-position = Vector2( -4.33727, -31.1145 )
+[node name="position3" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -64.3521, 51.3178 )
+rotation = 1.38177
+texture = ExtResource( 5 )
 
-[node name="p4" type="Position2D" parent="unit_poses"]
-position = Vector2( 2.13341, 28.0921 )
+[node name="position4" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( 53.5732, -24.4179 )
+rotation = -1.74974
+texture = ExtResource( 5 )
 
-[node name="p2" type="Position2D" parent="unit_poses"]
-position = Vector2( -75.8382, -21.4085 )
+[node name="position5" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -8.35408, -16.7758 )
+rotation = -1.7
+texture = ExtResource( 5 )
 
-[node name="p3" type="Position2D" parent="unit_poses"]
-position = Vector2( -69.691, 47.1806 )
-
-[node name="normal_border" type="Position2D" parent="."]
-editor/display_folded = true
-position = Vector2( -0.27739, 0.27739 )
-
-[node name="end" type="Position2D" parent="normal_border"]
-position = Vector2( 2.78056, 20.4362 )
+[node name="position6" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -78.4504, -6.23501 )
+rotation = -1.69161
+texture = ExtResource( 5 )

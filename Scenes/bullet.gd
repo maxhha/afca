@@ -6,8 +6,6 @@ const SPEED = 600
 var damage = 1
 var linear_vel = Vector2()
 
-var ignore = []
-
 func init(dir, by_player=false):
 	if by_player:
 		collision_mask |= 8
@@ -26,7 +24,12 @@ func _physics_process(delta):
 			
 			if k.collider.is_in_group('unit'):
 				k.collider.get_damage(damage)
-			
+				
+			elif k.collider.is_in_group('obstacle'):
+				for o in k.collider.get_ignore_objects():
+					add_collision_exception_with(o)
+				add_collision_exception_with(k.collider)
+				continue
 			queue_free()
 			break
 		else:

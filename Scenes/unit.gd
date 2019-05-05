@@ -108,8 +108,22 @@ func can_attack(e):
 		return false
 	$ray_walls.cast_to = e.global_position - global_position
 	$ray_walls.rotation = -rotation
-	$ray_walls.force_raycast_update()
-	return not $ray_walls.is_colliding()
+	
+	$ray_walls.clear_exceptions()
+	
+	while true:
+		$ray_walls.force_raycast_update()
+		if not $ray_walls.is_colliding():
+			return true
+		if $ray_walls.get_collider().is_in_group('obstacle'):
+			for i in $ray_walls.get_collider().get_ignore_objects():
+				if i == e:
+					return false
+				else:
+					$ray_walls.add_exception(i)
+			$ray_walls.add_exception($ray_walls.get_collider())
+			continue
+		return false
 
 var Bullet = preload("res://Scenes/bullet.tscn")
 
@@ -122,7 +136,7 @@ func start_attack(e):
 	
 	var b = Bullet.instance().init(e.global_position - global_position, true)
 	get_parent().add_child(b)
-	b.global_position = global_position + Vector2(1,0).rotated(rotation)*20
+	b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 	$shoot1.play()
 
 func get_damage(dmg):
