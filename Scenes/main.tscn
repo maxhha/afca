@@ -44,9 +44,11 @@ rotation = -0.785397
 
 [node name="cursor" type="Sprite" parent="."]
 position = Vector2( 987.101, 95.7635 )
-scale = Vector2( 0.3, 0.3 )
+scale = Vector2( 0.2, 0.2 )
 z_index = 1025
 texture = ExtResource( 4 )
+hframes = 2
+region_rect = Rect2( 0, 0, 256, 256 )
 
 [node name="camera_control" type="Node2D" parent="."]
 editor/display_folded = true
@@ -90,6 +92,7 @@ bus = "Music"
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="white_screen" type="ColorRect" parent="UI"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -0.418091

@@ -5,12 +5,13 @@ const MOVE_SPEED = 200
 const HIDE_TIME = 0.2
 const HIDING_TIME = 2
 const STAND_TIME = 2
+const ROTATE_SPEED = PI / 0.4
 
 const ATTACK_TIMEOUT = 0.3
 
 const DAMAGED_EFF_T = 0.2
 
-enum STATES {STAND, MOVE, ATTACK, HIDE, HIDING, RISING, CHECKOUT}
+enum STATES {STAND, MOVE, ATTACK, HIDE, HIDING, STANDUP, DEATH}
 
 var STATE = STATES.STAND
 
@@ -30,6 +31,7 @@ func set_health(h):
 	_damaged_timer = DAMAGED_EFF_T
 	if h <= 0:
 		self._owned_hide_point = null
+		STATE = STATES.DEATH
 		queue_free()
 
 func _physics_process(delta):
@@ -67,15 +69,20 @@ func _physics_process(delta):
 		
 		STATES.HIDE:
 			if _target_pos.distance_to(global_position) <= MOVE_SPEED*delta:
-				start_hiding()
+				if rotation == _owned_hide_point.normal.angle():
+					start_hiding()
 		
 		STATES.HIDING:
 			timer -= delta
 			if timer <= 0:
+				STATE = STATES.STANDUP
+		
+		STATES.STANDUP:
+			if cos(rotation - _owned_hide_point.normal.angle()) < -0.99:
 				STATE = STATES.STAND
 				timer = STAND_TIME
-				rotate(PI)
 	
+
 	#update
 	match STATE:
 		STATES.STAND:
@@ -84,28 +91,46 @@ func _physics_process(delta):
 		STATES.MOVE:
 			linear_vel = linear_vel.linear_interpolate((_target.global_position - global_position).normalized()*MOVE_SPEED, 0.4)
 		STATES.HIDE:
-			linear_vel = linear_vel.linear_interpolate((_target_pos - global_position).normalized()*MOVE_SPEED, 0.4)
+			if _target_pos.distance_to(global_position) > MOVE_SPEED*delta:
+				linear_vel = linear_vel.linear_interpolate((_target_pos - global_position).normalized()*MOVE_SPEED, 0.4)
+			else:
+				global_position = _target_pos
+				linear_vel = Vector2()
+				rotate_to(_owned_hide_point.normal.angle(), ROTATE_SPEED*delta)
+				
 		STATES.ATTACK:
 			timer = max(0, timer - delta)
 			if timer == 0:
 				STATE = STATES.STAND
+		
+		STATES.STANDUP:
+			rotate_to(_owned_hide_point.normal.angle()+PI, ROTATE_SPEED*delta)
 	#animation
 	match STATE:
 		STATES.MOVE:
 			rotation = linear_vel.angle()
 		STATES.HIDE:
-			if _target_pos.distance_to(global_position) < MOVE_SPEED*HIDE_TIME:
-				var r = _owned_hide_point.normal.angle()
-				rotation += asin(sin(r-rotation)) / HIDE_TIME
-			else:
+			if linear_vel.length_squared() > 0:
 				rotation = linear_vel.angle()
 
+func rotate_to(r, step):
+	r = deg2rad(rad2deg(r))
+	var c = acos(cos(r - rotation))
+	
+	if c < step:
+		rotation = r 
+	else:
+		var d = sign(sin(r - rotation))
+		if d == 0:
+			d = randi() % 2 * 2 - 1
+		rotation += d * step
 
 func start_hiding():
 	STATE = STATES.HIDING
 	global_position = _target_pos
 	rotation = _owned_hide_point.normal.angle()
 	timer = HIDING_TIME
+	_target = null
 	linear_vel = Vector2()
 
 var _owned_hide_point setget set_owned_hide_point
@@ -118,12 +143,9 @@ func set_owned_hide_point(p):
 		_owned_hide_point.own(self)
 
 func hide_at(p):
-	if _owned_hide_point == p:
-		start_hiding()
-	else:
-		self._owned_hide_point = p
-		_target_pos = p.to_global(OFFSET_SIZE)
-		STATE = STATES.HIDE
+	self._owned_hide_point = p
+	_target_pos = p.to_global(OFFSET_SIZE)
+	STATE = STATES.HIDE
 
 const OFFSET_SIZE = 20
 
@@ -189,8 +211,10 @@ func start_attack(e):
 	STATE = STATES.ATTACK
 	timer = ATTACK_TIMEOUT
 	rotation = (e.global_position - global_position).angle()
-	
-	var b = Bullet.instance().init(e.global_position - global_position)
+	shoot()
+
+func shoot():
+	var b = Bullet.instance().init(Vector2(1,0).rotated(rotation))
 	for i in _ignore:
 		b.add_collision_exception_with(i)
 	get_parent().add_child(b)

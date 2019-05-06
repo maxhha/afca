@@ -32,6 +32,7 @@ var bg_grad_current = 0
 var bg_grad_offset_i = 0
 
 func _ready():
+	$UI/white_screen.show()
 	randomize()
 	current_unit = player_units[current]
 	global.player_units = player_units
@@ -136,6 +137,8 @@ func _process(delta):
 		if gameover_timer == 0:
 			get_tree().reload_current_scene()
 
+enum CURSOR_FRAME{NORMAL=0, DENIED=1}
+
 # warning-ignore:unused_argument
 func unit_control_process(delta):
 	pointer.global_position = current_unit.global_position
@@ -145,14 +148,15 @@ func unit_control_process(delta):
 		current_unit.look(cursor.global_position)
 		if current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position):
 			
-			$cursor.modulate.a = 1
+			$cursor.frame = CURSOR_FRAME.NORMAL
 			if Input.is_action_just_pressed("click"):
 				current_unit.move_to(cursor.global_position)
 				next_unit()
 		else:
-			$cursor.modulate.a = 0.2
+			$cursor.frame = CURSOR_FRAME.DENIED
+		$cursor.show()
 	else:
-		 $cursor.modulate.a = 0
+		 $cursor.hide()
 
 func chunks_generator_update():
 	if not (current_chunk and current_chunk.has_point($camera_control.global_position)):
