@@ -69,7 +69,7 @@ func _physics_process(delta):
 		
 		STATES.HIDE:
 			if _target_pos.distance_to(global_position) <= MOVE_SPEED*delta:
-				if rotation == _owned_hide_point.normal.angle():
+				if rotation == _owned_hide_point.get_rotation():
 					start_hiding()
 		
 		STATES.HIDING:
@@ -78,7 +78,7 @@ func _physics_process(delta):
 				STATE = STATES.STANDUP
 		
 		STATES.STANDUP:
-			if cos(rotation - _owned_hide_point.normal.angle()) < -0.99:
+			if cos(rotation - _owned_hide_point.get_rotation()) < -0.99:
 				STATE = STATES.STAND
 				timer = STAND_TIME
 	
@@ -96,7 +96,7 @@ func _physics_process(delta):
 			else:
 				global_position = _target_pos
 				linear_vel = Vector2()
-				rotate_to(_owned_hide_point.normal.angle(), ROTATE_SPEED*delta)
+				rotate_to(_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
 				
 		STATES.ATTACK:
 			timer = max(0, timer - delta)
@@ -104,7 +104,7 @@ func _physics_process(delta):
 				STATE = STATES.STAND
 		
 		STATES.STANDUP:
-			rotate_to(_owned_hide_point.normal.angle()+PI, ROTATE_SPEED*delta)
+			rotate_to(_owned_hide_point.get_rotation()+PI, ROTATE_SPEED*delta)
 	#animation
 	match STATE:
 		STATES.MOVE:
@@ -128,7 +128,7 @@ func rotate_to(r, step):
 func start_hiding():
 	STATE = STATES.HIDING
 	global_position = _target_pos
-	rotation = _owned_hide_point.normal.angle()
+	rotation = _owned_hide_point.get_rotation()
 	timer = HIDING_TIME
 	_target = null
 	linear_vel = Vector2()
@@ -179,11 +179,19 @@ func can_attack(e):
 	for i in _ignore:
 		$ray_walls.add_exception(i)
 	
-	$ray_walls.force_raycast_update()
-	
-	
-	
-	return not $ray_walls.is_colliding()
+	while true:
+		$ray_walls.force_raycast_update()
+		if not $ray_walls.is_colliding():
+			return true
+		if $ray_walls.get_collider().is_in_group('obstacle'):
+			for i in $ray_walls.get_collider().get_ignore_objects():
+				if i == e:
+					return false
+				else:
+					$ray_walls.add_exception(i)
+			$ray_walls.add_exception($ray_walls.get_collider())
+			continue
+		return false
 
 func get_nearest_enemy():
 	var enemies = $view_area.get_overlapping_bodies()
@@ -231,7 +239,8 @@ func _process(delta):
 	$sprite_white.modulate.a = k
 
 func _draw():
-	draw_circle(Vector2(), ATTACK_DISTANCE, Color("40f00000"))
+	if global.SHOW_HINTS:
+		draw_circle(Vector2(), ATTACK_DISTANCE, Color("40f00000"))
 
 func get_damage(dmg):
 	self.health -= dmg

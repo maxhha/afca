@@ -4,7 +4,6 @@
 [ext_resource path="res://Scenes/trunk.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/enemy1.tscn" type="PackedScene" id=3]
 
-
 [node name="walls" type="StaticBody2D"]
 collision_mask = 0
 script = ExtResource( 1 )
@@ -31,10 +30,11 @@ position = Vector2( 719, 471 )
 rotation = 0.523598
 
 [node name="trunk5" parent="." instance=ExtResource( 2 )]
-position = Vector2( 757, 864 )
+position = Vector2( 719, 976 )
+rotation = 0.623101
 
 [node name="trunk3" parent="." instance=ExtResource( 2 )]
-position = Vector2( 437, 897 )
+position = Vector2( 448, 1055 )
 rotation = 0.0747828
 
 [node name="enemy" parent="." instance=ExtResource( 3 )]
@@ -42,11 +42,11 @@ position = Vector2( 656, 1333 )
 rotation = 1.80834
 
 [node name="enemy2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 783, 1123 )
+position = Vector2( 786, 1107 )
 rotation = 1.16579
 
 [node name="enemy3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 360, 838 )
+position = Vector2( 365, 894 )
 rotation = 1.76026
 
 [node name="enemy4" parent="." instance=ExtResource( 3 )]
@@ -66,5 +66,5 @@ position = Vector2( 796, 430 )
 rotation = 1.27902
 
 [node name="enemy8" parent="." instance=ExtResource( 3 )]
-position = Vector2( 420, 625 )
+position = Vector2( 588, 613 )
 rotation = 0.753761

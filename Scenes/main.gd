@@ -137,26 +137,66 @@ func _process(delta):
 		if gameover_timer == 0:
 			get_tree().reload_current_scene()
 
-enum CURSOR_FRAME{NORMAL=0, DENIED=1}
+enum CURSOR_FRAME{NORMAL=0, DENIED=1, HIDE=2}
 
 # warning-ignore:unused_argument
 func unit_control_process(delta):
 	pointer.global_position = current_unit.global_position
-	cursor.global_position = get_global_mouse_position()
+	var cpos = get_global_mouse_position()
 	
 	if current_unit.can_move():
-		current_unit.look(cursor.global_position)
-		if current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position):
+		
+		var h = get_hiding_point(cpos, current_unit.OFFSET_SIZE)
+		
+		if h:
+			cpos = h.to_global(current_unit.OFFSET_SIZE)
 			
-			$cursor.frame = CURSOR_FRAME.NORMAL
+			if h.owned_by or not no_wall_on_path(current_unit.global_position, cpos):
+				cursor.frame = CURSOR_FRAME.DENIED
+			else:
+				cursor.frame = CURSOR_FRAME.HIDE
+				if Input.is_action_just_pressed("click"):
+					current_unit.hide_at(h)
+					next_unit()
+			
+		elif current_unit.is_free_move_to(cpos) and no_wall_on_path(current_unit.global_position, cpos):
+			cursor.frame = CURSOR_FRAME.NORMAL
 			if Input.is_action_just_pressed("click"):
-				current_unit.move_to(cursor.global_position)
+				current_unit.move_to(cpos)
 				next_unit()
 		else:
-			$cursor.frame = CURSOR_FRAME.DENIED
-		$cursor.show()
+			cursor.frame = CURSOR_FRAME.DENIED
+		
+		
+		cursor.show()
+		current_unit.look(cpos)
 	else:
-		 $cursor.hide()
+		cursor.hide()
+	
+	cursor.global_position = cpos
+#
+#func current_unit_can_move_to_cursor():
+#	return current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position)
+
+func get_hiding_point(pos, offset):
+	var hide_areas = cursor.get_node('hide_area').get_overlapping_areas()
+	if hide_areas.size() == 0:
+		return null
+	
+	var min_d
+	var min_p
+	
+	for h in hide_areas:
+		var p = h.get_nearest_free_point_to(pos)
+		if p:
+			var d = pos.distance_to(p.to_global(offset))
+			if min_d == null or (min_d > d):
+				min_d = d
+				min_p = p
+	
+	if min_d > $cursor/hide_area/CollisionShape2D.shape.radius:
+		return null
+	return min_p
 
 func chunks_generator_update():
 	if not (current_chunk and current_chunk.has_point($camera_control.global_position)):

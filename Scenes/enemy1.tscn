@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scenes/enemy_runner.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/solder.png" type="Texture" id=2]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 25.5
@@ -37,7 +38,6 @@ position = Vector2( 0.811874, -9.16259 )
 shape = SubResource( 1 )
 
 [node name="hide_area" type="Area2D" parent="."]
-editor/display_folded = true
 monitorable = false
 collision_layer = 0
 collision_mask = 4
@@ -67,9 +67,18 @@ texture = ExtResource( 2 )
 collision_mask = 17
 
 [node name="view_area" type="Area2D" parent="."]
+editor/display_folded = true
+visible = false
 monitorable = false
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
 shape = SubResource( 5 )
+
+[node name="view" parent="." instance=ExtResource( 4 )]
+radius = 448.0
+
+[node name="attack" parent="." instance=ExtResource( 4 )]
+modulate = Color( 1, 0, 0, 1 )
+radius = 300.0
