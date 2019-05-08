@@ -12,6 +12,25 @@ onready var player_units = $units.get_children()
 
 onready var cursor = $cursor
 onready var pointer = $pointer
+onready var pointer_circle = $pointer/circle
+
+enum CURSOR_TYPE{NORMAL=0, DENIED=1, HIDE=2}
+var cursor_type = CURSOR_TYPE.NORMAL setget set_cursor_type
+
+var _cursor_normal = preload("res://Sprites/cursor/normal.png")
+var _cursor_denied = preload("res://Sprites/cursor/denied.png")
+var _cursor_hide = preload("res://Sprites/cursor/safe.png")
+var _cursor_center = _cursor_normal.get_size() / 2
+
+func set_cursor_type(t):
+	cursor_type = t
+	match t:
+		CURSOR_TYPE.NORMAL:
+			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
+		CURSOR_TYPE.DENIED:
+			Input.set_custom_mouse_cursor(_cursor_denied, Input.CURSOR_ARROW, _cursor_center)
+		CURSOR_TYPE.HIDE:
+			Input.set_custom_mouse_cursor(_cursor_hide, Input.CURSOR_ARROW, _cursor_center)
 
 signal game_over
 
@@ -137,11 +156,10 @@ func _process(delta):
 		if gameover_timer == 0:
 			get_tree().reload_current_scene()
 
-enum CURSOR_FRAME{NORMAL=0, DENIED=1, HIDE=2}
-
 # warning-ignore:unused_argument
 func unit_control_process(delta):
 	pointer.global_position = current_unit.global_position
+	pointer_circle.radius = current_unit.RUN_DISTANCE
 	var cpos = get_global_mouse_position()
 	
 	if current_unit.can_move():
@@ -152,26 +170,28 @@ func unit_control_process(delta):
 			cpos = h.to_global(current_unit.OFFSET_SIZE)
 			
 			if h.owned_by or not no_wall_on_path(current_unit.global_position, cpos):
-				cursor.frame = CURSOR_FRAME.DENIED
+				self.cursor_type = CURSOR_TYPE.DENIED
 			else:
-				cursor.frame = CURSOR_FRAME.HIDE
+				self.cursor_type = CURSOR_TYPE.HIDE
 				if Input.is_action_just_pressed("click"):
 					current_unit.hide_at(h)
 					next_unit()
 			
 		elif current_unit.is_free_move_to(cpos) and no_wall_on_path(current_unit.global_position, cpos):
-			cursor.frame = CURSOR_FRAME.NORMAL
+			self.cursor_type = CURSOR_TYPE.NORMAL
 			if Input.is_action_just_pressed("click"):
 				current_unit.move_to(cpos)
 				next_unit()
 		else:
-			cursor.frame = CURSOR_FRAME.DENIED
+			self.cursor_type = CURSOR_TYPE.DENIED
 		
 		
 		cursor.show()
 		current_unit.look(cpos)
+		pointer_circle.show()
 	else:
 		cursor.hide()
+		pointer_circle.hide()
 	
 	cursor.global_position = cpos
 #

@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
-const ATTACK_DISTANCE = 300
-const MOVE_SPEED = 200
+const ATTACK_DISTANCE = 325
+const MOVE_SPEED = 300
 const HIDE_TIME = 0.2
 const HIDING_TIME = 2
 const STAND_TIME = 2

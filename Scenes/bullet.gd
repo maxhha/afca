@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 const OBSTACLE_BIT = 16
-const SPEED = 600
+const SPEED = 1000
 
 var damage = 1
 var linear_vel = Vector2()

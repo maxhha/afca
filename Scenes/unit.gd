@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
-const ATTACK_DISTANCE = 300
+const RUN_DISTANCE = 450
+const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 400
 const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 0.25
@@ -26,7 +27,7 @@ func set_owned_hide_point(p):
 
 signal dead
 
-var health = 3 setget set_health
+var health = 5 setget set_health
 
 func set_health(h):
 	health = h
@@ -221,7 +222,7 @@ func get_damage(dmg):
 	self.health -= dmg
 
 func is_free_move_to(p):
-	return not test_move(transform, p - global_position, false)
+	return global_position.distance_to(p) <= RUN_DISTANCE and not test_move(transform, p - global_position, false)
 
 var _ignore = []
 
