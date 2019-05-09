@@ -111,12 +111,23 @@ func _physics_process(delta):
 			rotate_to(_target_rot, ROTATE_SPEED*delta)
 	#animation
 	match STATE:
+		STATES.STAND, STATES.ATTACK:
+			$sprite.play('stand')
+
 		STATES.MOVE:
 			rotation = linear_vel.angle()
+			$sprite.play('run')
+		STATES.STANDUP:
+			$sprite.play('stand_up')
+		
 		STATES.HIDE:
 			if linear_vel.length_squared() > 0:
 				rotation = linear_vel.angle()
-	
+			else:
+				$sprite.play('stand_down')
+		
+		STATES.HIDING:
+			$sprite.play('hiding')
 	if _shoot_timer > 0:
 		_shoot_timer -= delta
 		if _shoot_timer <= 0:
@@ -255,7 +266,7 @@ func move_to(e):
 func _process(delta):
 	_damaged_timer = max(_damaged_timer - delta, 0)
 	var k = ease(_damaged_timer / DAMAGED_EFF_T, 0.5)
-	$sprite_white.modulate.a = k
+	#$sprite_white.modulate.a = k
 
 func _draw():
 	if global.SHOW_HINTS:

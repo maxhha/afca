@@ -20,13 +20,14 @@ script = ExtResource( 1 )
 [node name="bg" type="Node2D" parent="."]
 
 [node name="pointer" type="Position2D" parent="."]
-position = Vector2( 468.895, 497.539 )
+position = Vector2( 621.854, 358.362 )
 z_index = 64
 
 [node name="Sprite" type="Sprite" parent="pointer"]
 modulate = Color( 1, 1, 1, 0.509804 )
-position = Vector2( -0.060791, -53.2545 )
-scale = Vector2( 0.15, 0.3 )
+position = Vector2( -2.74072, -76.9572 )
+rotation = -2.35619
+scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 2 )
 
 [node name="circle" parent="pointer" instance=ExtResource( 3 )]
@@ -115,5 +116,6 @@ color = Color( 1, 1, 1, 0 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 10 )
+autoplay = true
 mix_target = 1
 bus = "Music"

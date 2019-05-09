@@ -130,6 +130,8 @@ func _physics_process(delta):
 				rotation = linear_vel.angle()
 			else:
 				$sprite.play('stand_down')
+		STATES.HIDING:
+			$sprite.play('hiding')
 	
 	if _shoot_timer > 0:
 		_shoot_timer -= delta

@@ -61,7 +61,7 @@ func _ready():
 		p.connect("dead", self, "_on_player_unit_death", [p])
 	
 	#set up chunks
-	var normal_size = get_viewport_rect().size
+	var normal_size = Vector2(1024, 600)
 	var border_size = 512
 	$bg.position.x = -border_size
 	

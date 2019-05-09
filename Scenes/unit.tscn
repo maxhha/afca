@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/unit.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/solder.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/solder_run_0.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/solder_run_1.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/solder_run_2.png" type="Texture" id=5]
-[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Sprites/solder_hiding_0.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/solder_hiding_1.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/solder_run_1.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/solder_run_2.png" type="Texture" id=7]
+[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=8]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -14,15 +16,15 @@ animations = [ {
 "name": "stand",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "hiding",
-"speed": 5.0
+"speed": 3.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 6 ), ExtResource( 3 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "run",
-"speed": 10.0
+"speed": 9.0
 }, {
 "frames": [ ExtResource( 3 ), ExtResource( 2 ) ],
 "loop": false,
@@ -72,5 +74,5 @@ shape = SubResource( 3 )
 [node name="ray_walls" type="RayCast2D" parent="."]
 collision_mask = 17
 
-[node name="shoot1" parent="." instance=ExtResource( 6 )]
+[node name="shoot1" parent="." instance=ExtResource( 8 )]
 max_distance = 600.0
