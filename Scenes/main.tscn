@@ -1,14 +1,15 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Scenes/camera_control.gd" type="Script" id=5]
-[ext_resource path="res://Sprites/solder.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/trunk.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/barrel_top.png" type="Texture" id=8]
-[ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=9]
+[ext_resource path="res://Sprites/cursor/safe.png" type="Texture" id=5]
+[ext_resource path="res://Scenes/camera_control.gd" type="Script" id=6]
+[ext_resource path="res://Sprites/solder.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/trunk.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/barrel_top.png" type="Texture" id=9]
+[ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 98.8065
@@ -62,10 +63,14 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="cursor/hide_area"]
 shape = SubResource( 1 )
 
+[node name="shield" type="Sprite" parent="cursor"]
+scale = Vector2( 5, 5 )
+texture = ExtResource( 5 )
+
 [node name="camera_control" type="Node2D" parent="."]
 editor/display_folded = true
 position = Vector2( 515.12, 298.875 )
-script = ExtResource( 5 )
+script = ExtResource( 6 )
 
 [node name="camera" type="Camera2D" parent="camera_control"]
 current = true
@@ -86,15 +91,15 @@ position = Vector2( 306.148, 410.691 )
 [node name="solder" type="Sprite" parent="."]
 position = Vector2( -727.95, 317.456 )
 scale = Vector2( 0.333, 0.333 )
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 
 [node name="trunk2" type="Sprite" parent="."]
 position = Vector2( -665.931, 204.856 )
-texture = ExtResource( 7 )
+texture = ExtResource( 8 )
 
 [node name="barrel_top" type="Sprite" parent="."]
 position = Vector2( -600, 320 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -109,6 +114,6 @@ margin_bottom = -0.418152
 color = Color( 1, 1, 1, 0 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 9 )
+stream = ExtResource( 10 )
 mix_target = 1
 bus = "Music"

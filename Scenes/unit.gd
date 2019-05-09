@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const SHOOT_RAND = PI/8
+const SHOOT_RAND = PI/12
 const RUN_DISTANCE = 450
 const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 400
@@ -8,7 +8,7 @@ const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 0.5
 const STAND_TIME = 2
 
-const ROTATE_SPEED = PI / 0.4
+const ROTATE_SPEED = PI / 0.3
 
 const HIDING_TIME = 2
 

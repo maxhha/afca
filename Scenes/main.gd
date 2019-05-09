@@ -30,7 +30,8 @@ func set_cursor_type(t):
 		CURSOR_TYPE.DENIED:
 			Input.set_custom_mouse_cursor(_cursor_denied, Input.CURSOR_ARROW, _cursor_center)
 		CURSOR_TYPE.HIDE:
-			Input.set_custom_mouse_cursor(_cursor_hide, Input.CURSOR_ARROW, _cursor_center)
+			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
+	$cursor/shield.visible = t == CURSOR_TYPE.HIDE
 
 signal game_over
 

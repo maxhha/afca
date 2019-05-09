@@ -1,12 +1,13 @@
 extends KinematicBody2D
 
-const SHOOT_RAND = PI/8
+const SHOOT_RAND = PI/12
 const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 300
 const HIDE_TIME = 0.2
 const HIDING_TIME = 2
 const STAND_TIME = 2
-const ROTATE_SPEED = PI / 0.4
+const STANDUP_TIMER = 0.3
+const ROTATE_SPEED = PI / 0.3
 
 const ATTACK_TIMEOUT = 0.5
 
@@ -20,6 +21,7 @@ var linear_vel = Vector2()
 
 var _target 
 var _target_pos
+var _target_rot
 
 
 var health = 2 setget set_health
@@ -76,10 +78,11 @@ func _physics_process(delta):
 		STATES.HIDING:
 			timer -= delta
 			if timer <= 0:
-				STATE = STATES.STANDUP
+				start_standup(_owned_hide_point.get_rotation() + PI)
 		
 		STATES.STANDUP:
-			if cos(rotation - _owned_hide_point.get_rotation()) < -0.99:
+			timer -= delta
+			if timer <= 0 and cos(rotation - _target_rot) > 0.99:
 				STATE = STATES.STAND
 				timer = STAND_TIME
 	
@@ -105,7 +108,7 @@ func _physics_process(delta):
 				STATE = STATES.STAND
 		
 		STATES.STANDUP:
-			rotate_to(_owned_hide_point.get_rotation()+PI, ROTATE_SPEED*delta)
+			rotate_to(_target_rot, ROTATE_SPEED*delta)
 	#animation
 	match STATE:
 		STATES.MOVE:
@@ -123,6 +126,11 @@ func _physics_process(delta):
 			
 			get_parent().add_child(b)
 			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
+
+func start_standup(target_rot=rotation):
+	STATE = STATES.STANDUP
+	timer = STANDUP_TIMER
+	_target_rot = target_rot
 
 func rotate_to(r, step):
 	r = deg2rad(rad2deg(r))
@@ -255,6 +263,9 @@ func _draw():
 
 func get_damage(dmg):
 	self.health -= dmg
+	if STATE == STATES.HIDING:
+		start_standup()
+		self._owned_hide_point = null
 
 func is_hiding():
 	return STATE == STATES.HIDING
