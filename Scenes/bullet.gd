@@ -25,7 +25,7 @@ func _physics_process(delta):
 			if k.collider.is_in_group('unit'):
 				k.collider.get_damage(damage)
 				
-			elif k.collider.is_in_group('obstacle'):
+			elif k.collider.is_in_group('obstacle') and k.collider.can_pass(self):
 				for o in k.collider.get_ignore_objects():
 					add_collision_exception_with(o)
 				add_collision_exception_with(k.collider)

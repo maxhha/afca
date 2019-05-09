@@ -1,10 +1,11 @@
 extends KinematicBody2D
 
+const SHOOT_RAND = PI/8
 const RUN_DISTANCE = 450
 const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 400
 const MIN_SPEED = 0.4
-const ATTACK_TIMEOUT = 0.25
+const ATTACK_TIMEOUT = 0.5
 const STAND_TIME = 2
 
 const ROTATE_SPEED = PI / 0.4
@@ -108,6 +109,9 @@ func _physics_process(delta):
 	
 	#animation
 	match STATE:
+		STATES.STAND:
+			$sprite.play('stand')
+			
 		STATES.MOVE:
 			var e = get_nearest_enemy()
 			if e:
@@ -116,13 +120,26 @@ func _physics_process(delta):
 			elif linear_vel.length() >= MIN_SPEED:
 				rotation = linear_vel.angle()
 				_targeting = false
-		
+			$sprite.play('run')
 		STATES.STANDUP:
 			rotate_to(_owned_hide_point.get_rotation()+PI, ROTATE_SPEED*delta)
+			$sprite.play('stand_up')
 		
 		STATES.HIDE:
 			if linear_vel.length_squared() > 0:
 				rotation = linear_vel.angle()
+			else:
+				$sprite.play('stand_down')
+	
+	if _shoot_timer > 0:
+		_shoot_timer -= delta
+		if _shoot_timer <= 0:
+			var b = Bullet.instance().init(Vector2(1,0).rotated(rotation + (randf()-0.5)*SHOOT_RAND), true)
+			for i in _ignore:
+				b.add_collision_exception_with(i)
+			
+			get_parent().add_child(b)
+			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 
 func rotate_to(r, step):
 	r = deg2rad(rad2deg(r))
@@ -150,7 +167,7 @@ func look(point):
 			rotation = r
 
 func can_move():
-	return STATE == STATES.STAND or STATE == STATES.HIDING
+	return STATE == STATES.STAND or STATE == STATES.HIDING or STATE == STATES.ATTACK
 
 func is_hiding():
 	return STATE == STATES.HIDING
@@ -234,13 +251,12 @@ func remove_ignore(obj):
 	_ignore.erase(obj)
 	remove_collision_exception_with(obj)
 
+const CREATE_BULLET_TIMEOUT = 0.08
+var _shoot_timer = 0
+
 func shoot():
-	var b = Bullet.instance().init(Vector2(1,0).rotated(rotation), true)
-	for i in _ignore:
-		b.add_collision_exception_with(i)
-	get_parent().add_child(b)
-	b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 	$shoot1.play()
+	_shoot_timer = CREATE_BULLET_TIMEOUT
 
 const OFFSET_SIZE = 20
 

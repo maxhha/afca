@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+const SHOOT_RAND = PI/8
 const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 300
 const HIDE_TIME = 0.2
@@ -7,7 +8,7 @@ const HIDING_TIME = 2
 const STAND_TIME = 2
 const ROTATE_SPEED = PI / 0.4
 
-const ATTACK_TIMEOUT = 0.3
+const ATTACK_TIMEOUT = 0.5
 
 const DAMAGED_EFF_T = 0.2
 
@@ -112,6 +113,16 @@ func _physics_process(delta):
 		STATES.HIDE:
 			if linear_vel.length_squared() > 0:
 				rotation = linear_vel.angle()
+	
+	if _shoot_timer > 0:
+		_shoot_timer -= delta
+		if _shoot_timer <= 0:
+			var b = Bullet.instance().init(Vector2(1,0).rotated(rotation + (randf()-0.5)*SHOOT_RAND))
+			for i in _ignore:
+				b.add_collision_exception_with(i)
+			
+			get_parent().add_child(b)
+			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 
 func rotate_to(r, step):
 	r = deg2rad(rad2deg(r))
@@ -221,13 +232,13 @@ func start_attack(e):
 	rotation = (e.global_position - global_position).angle()
 	shoot()
 
+
+const CREATE_BULLET_TIMEOUT = 0.08#sec
+var _shoot_timer = 0
+
 func shoot():
-	var b = Bullet.instance().init(Vector2(1,0).rotated(rotation))
-	for i in _ignore:
-		b.add_collision_exception_with(i)
-	get_parent().add_child(b)
-	b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 	$shoot1.play()
+	_shoot_timer = CREATE_BULLET_TIMEOUT
 
 func move_to(e):
 	self._target = e

@@ -35,7 +35,6 @@ z_as_relative = false
 always_show = true
 
 [node name="units" type="Node2D" parent="."]
-editor/display_folded = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 4 )]
@@ -97,11 +96,6 @@ texture = ExtResource( 7 )
 position = Vector2( -600, 320 )
 texture = ExtResource( 8 )
 
-[node name="audio" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 9 )
-mix_target = 1
-bus = "Music"
-
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="white_screen" type="ColorRect" parent="UI"]
@@ -113,3 +107,8 @@ margin_top = -0.418152
 margin_right = -0.418091
 margin_bottom = -0.418152
 color = Color( 1, 1, 1, 0 )
+
+[node name="audio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+mix_target = 1
+bus = "Music"
