@@ -7,7 +7,7 @@ const MOVE_SPEED = 400
 const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 0.5
 const STAND_TIME = 2
-
+const STANDUP_TIMER = 0.3
 const ROTATE_SPEED = PI / 0.3
 
 const HIDING_TIME = 2
@@ -40,6 +40,7 @@ func set_health(h):
 
 var _target
 var _target_pos
+var _target_rot
 var _targeting = false
 
 var timer = 0
@@ -76,10 +77,12 @@ func _physics_process(delta):
 		STATES.HIDING:
 			timer -= delta
 			if timer <= 0:
-				STATE = STATES.STANDUP
+				start_standup(rotation + PI)
+				
 		
 		STATES.STANDUP:
-			if cos(rotation - _owned_hide_point.get_rotation()) < -0.99:
+			timer -= delta
+			if timer <= 0 and cos(rotation - _target_rot) > 0.99:
 				STATE = STATES.STAND
 				timer = STAND_TIME
 	#action
@@ -105,7 +108,8 @@ func _physics_process(delta):
 				global_position = _target_pos
 				linear_vel = Vector2()
 				rotate_to(_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
-	
+		STATES.STANDUP:
+			rotate_to(_target_rot, ROTATE_SPEED*delta)
 	
 	#animation
 	match STATE:
@@ -122,7 +126,6 @@ func _physics_process(delta):
 				_targeting = false
 			$sprite.play('run')
 		STATES.STANDUP:
-			rotate_to(_owned_hide_point.get_rotation()+PI, ROTATE_SPEED*delta)
 			$sprite.play('stand_up')
 		
 		STATES.HIDE:
@@ -239,6 +242,16 @@ func start_attack(e):
 
 func get_damage(dmg):
 	self.health -= dmg
+	if STATE == STATES.HIDING:
+		start_standup()
+		self._owned_hide_point = null
+	elif STATE != STATES.DEATH and _owned_hide_point:
+		hide_at(_owned_hide_point)
+
+func start_standup(target_rot=rotation):
+	STATE = STATES.STANDUP
+	timer = STANDUP_TIMER
+	_target_rot = target_rot
 
 func is_free_move_to(p):
 	return global_position.distance_to(p) <= RUN_DISTANCE and not test_move(transform, p - global_position, false)

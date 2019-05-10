@@ -132,7 +132,6 @@ func create_bg_grad(indx):
 	var c2 = bg_grad_colors[(indx + 1) % len(bg_grad_colors)]
 	p.vertex_colors = PoolColorArray([c2, c1, c1, c2])
 	return p
-
 	
 func _on_screen_resize():
 	var normal_s = Vector2(1024, 600)

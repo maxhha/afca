@@ -109,6 +109,7 @@ func _physics_process(delta):
 		
 		STATES.STANDUP:
 			rotate_to(_target_rot, ROTATE_SPEED*delta)
+		
 	#animation
 	match STATE:
 		STATES.STAND, STATES.ATTACK:
@@ -277,6 +278,8 @@ func get_damage(dmg):
 	if STATE == STATES.HIDING:
 		start_standup()
 		self._owned_hide_point = null
+	elif STATE != STATES.DEATH and _owned_hide_point:
+		hide_at(_owned_hide_point)
 
 func is_hiding():
 	return STATE == STATES.HIDING
