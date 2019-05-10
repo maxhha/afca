@@ -147,6 +147,8 @@ func next_unit():
 func _process(delta):
 	if player_units.size() > 0:
 		unit_control_process(delta)
+	else:
+		pointer.hide()
 	chunks_generator_update()
 	bg_grad_update()
 	
@@ -173,6 +175,9 @@ func unit_control_process(delta):
 				self.cursor_type = CURSOR_TYPE.DENIED
 			else:
 				self.cursor_type = CURSOR_TYPE.HIDE
+				var x = h.parent.get_parent().block_propability
+				$cursor/shield.modulate.a = 2*x - x*x
+				
 				if Input.is_action_just_pressed("click"):
 					current_unit.hide_at(h)
 					next_unit()
@@ -214,7 +219,7 @@ func get_hiding_point(pos, offset):
 				min_d = d
 				min_p = p
 	
-	if min_d > $cursor/hide_area/CollisionShape2D.shape.radius:
+	if min_d and min_d > $cursor/hide_area/CollisionShape2D.shape.radius:
 		return null
 	return min_p
 

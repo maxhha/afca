@@ -1,12 +1,12 @@
 [gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Scenes/enemy_runner.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/enemy_runner_run_0.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_runner_run_0.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=7]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=9]
 
@@ -18,29 +18,29 @@ radius = 32.6324
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "stand",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 2 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 2 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 2 ) ],
 "loop": true,
 "name": "hiding",
 "speed": 3.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 6 ), ExtResource( 3 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 5 ), ExtResource( 2 ), ExtResource( 6 ) ],
 "loop": true,
 "name": "run",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 7 ), ExtResource( 2 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 7 ) ],
 "loop": false,
 "name": "stand_up",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 7 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "stand_down",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "stand",
 "speed": 5.0
 } ]
 
@@ -51,7 +51,6 @@ radius = 447.794
 "unit",
 ]]
 collision_layer = 8
-collision_mask = 17
 script = ExtResource( 1 )
 
 [node name="shape" type="CollisionShape2D" parent="."]

@@ -15,20 +15,37 @@ class HidePoint:
 		self.parent = parent
 	func is_free():
 		return owned_by == null
-	func to_global(offset:float)->Vector2:
+	func to_global(offset):
 		return parent.to_global(pos + offset*normal)
 	func own(obj=null):
 		emit_signal("owned", owned_by, obj)
 		owned_by = obj
 	func get_rotation():
 		return parent.global_transform.basis_xform(normal).angle()
-	
+	func get_stand_rotation():
+		return parent.global_transform.basis_xform(normal).rotated(PI).angle()
+
+class SoftHidePoint:
+	extends HidePoint
+	func _init(parent, pos).(parent, pos, 0):
+		pass
+	func to_global(offset):
+		return parent.to_global(pos)
+	func get_rotation():
+		return owned_by.rotation if owned_by else randf()*TAU
+	func get_stand_rotation():
+		return get_rotation()
+
 var points = []
 
 func _ready():
 	var ignore_parent = get_parent().is_in_group('obstacle')
 	for p in $unit_poses.get_children():
-		var h = HidePoint.new(self, p.position, p.rotation)
+		var h
+		if p is Position2D:
+			h = SoftHidePoint.new(self, p.position)
+		else:
+			h = HidePoint.new(self, p.position, p.rotation)
 		points.append(h)
 		if ignore_parent:
 			h.connect('owned', self, '_on_point_own')
@@ -52,3 +69,9 @@ func get_nearest_free_point_to(pos):
 			min_p = p
 	return min_p
 
+func get_hiding_objects():
+	var list = []
+	for p in points:
+		if p.owned_by and p.owned_by.is_hiding():
+			list.append(p.owned_by)
+	return list

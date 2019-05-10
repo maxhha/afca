@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scenes/forest1.gd" type="Script" id=1]
-[ext_resource path="res://Scenes/trunk.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Obstacles/trunk.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/enemy1.tscn" type="PackedScene" id=3]
 
 [node name="walls" type="StaticBody2D"]

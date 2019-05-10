@@ -77,7 +77,7 @@ func _physics_process(delta):
 		STATES.HIDING:
 			timer -= delta
 			if timer <= 0:
-				start_standup(rotation + PI)
+				start_standup(_owned_hide_point.get_stand_rotation())
 				
 		
 		STATES.STANDUP:

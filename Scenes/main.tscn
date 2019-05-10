@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Sprites/trunk.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/barrel_top.png" type="Texture" id=9]
 [ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=10]
+[ext_resource path="res://Scenes/Obstacles/bush.tscn" type="PackedScene" id=11]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 98.8065
@@ -82,7 +83,6 @@ drag_margin_bottom = 0.0
 
 [node name="wall_check" type="RayCast2D" parent="."]
 exclude_parent = false
-collision_mask = 17
 
 [node name="chunks" type="Node2D" parent="."]
 
@@ -119,3 +119,6 @@ stream = ExtResource( 10 )
 autoplay = true
 mix_target = 1
 bus = "Music"
+
+[node name="bush" parent="." instance=ExtResource( 11 )]
+position = Vector2( 566.101, 321.791 )
