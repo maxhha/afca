@@ -31,7 +31,7 @@ func set_cursor_type(t):
 			Input.set_custom_mouse_cursor(_cursor_denied, Input.CURSOR_ARROW, _cursor_center)
 		CURSOR_TYPE.HIDE:
 			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
-	$cursor/shield.visible = t == CURSOR_TYPE.HIDE
+	$hide_shield.visible = t == CURSOR_TYPE.HIDE
 
 signal game_over
 
@@ -171,12 +171,15 @@ func unit_control_process(delta):
 		if h:
 			cpos = h.to_global(current_unit.OFFSET_SIZE)
 			
-			if h.owned_by or not no_wall_on_path(current_unit.global_position, cpos):
+			if h.owned_by != null or not no_wall_on_path(current_unit.global_position, cpos):
 				self.cursor_type = CURSOR_TYPE.DENIED
 			else:
-				self.cursor_type = CURSOR_TYPE.HIDE
+				$hide_shield.global_position = cpos
 				var x = h.parent.get_parent().block_propability
-				$cursor/shield.modulate.a = 2*x - x*x
+				$hide_shield.modulate.a = 2*x - x*x
+				self.cursor_type = CURSOR_TYPE.HIDE
+				
+				
 				
 				if Input.is_action_just_pressed("click"):
 					current_unit.hide_at(h)
@@ -190,15 +193,12 @@ func unit_control_process(delta):
 		else:
 			self.cursor_type = CURSOR_TYPE.DENIED
 		
-		
-		cursor.show()
 		current_unit.look(cpos)
 		pointer_circle.show()
 	else:
-		cursor.hide()
 		pointer_circle.hide()
 	
-	cursor.global_position = cpos
+	cursor.global_position = get_global_mouse_position()
 #
 #func current_unit_can_move_to_cursor():
 #	return current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position)
@@ -284,8 +284,10 @@ func create_chunk(type, fallback_type, base_y=0, finish_points=null):
 onready var wall_check_ray = $wall_check
 
 func no_wall_on_path(p1, p2):
+	if p1.distance_to(p2) < 2:
+		return false
 	wall_check_ray.global_position = p1
-	wall_check_ray.cast_to = p2 - p1
+	wall_check_ray.cast_to = (p2 - p1).normalized()*((p2 - p1).length() + current_unit.OFFSET_SIZE)
 	
 	wall_check_ray.force_raycast_update()
 	return not wall_check_ray.is_colliding()

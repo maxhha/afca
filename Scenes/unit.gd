@@ -71,7 +71,7 @@ func _physics_process(delta):
 					hide_at(_owned_hide_point)
 		STATES.HIDE:
 			if _target_pos.distance_to(global_position) <= MOVE_SPEED*delta:
-				if rotation == _owned_hide_point.get_rotation():
+				if cos(rotation - _owned_hide_point.get_rotation()) > 0.99:
 					start_hiding()
 		
 		STATES.HIDING:
