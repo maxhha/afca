@@ -42,15 +42,15 @@ always_show = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 501.622, 456.643 )
+position = Vector2( 509.27, 316.582 )
 rotation = -1.57079
 
 [node name="unit2" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 434.031, 469.783 )
+position = Vector2( 441.679, 329.722 )
 rotation = -2.35619
 
 [node name="unit3" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 568.046, 469.398 )
+position = Vector2( 575.694, 329.337 )
 rotation = -0.785397
 
 [node name="cursor" type="Node2D" parent="."]
@@ -114,7 +114,6 @@ color = Color( 1, 1, 1, 0 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
-autoplay = true
 mix_target = 1
 bus = "Music"
 

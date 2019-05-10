@@ -24,7 +24,7 @@ var _target_pos
 var _target_rot
 
 
-var health = 2 setget set_health
+var health = 3 setget set_health
 
 var _damaged_timer = 0
 var timer = 0

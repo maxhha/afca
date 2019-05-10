@@ -1,5 +1,6 @@
 extends Node2D
 
+var _chunk_path = ['forest_road', 'free_forest', 'forest1', 'forest1']
 var _chunk_types = {}
 var _connect_points = null
 
@@ -88,11 +89,14 @@ func _ready():
 	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
-	chunks.append(create_chunk('forest_road', 'forest_road'))
+	chunks.append(get_next_chunk())
 	current_chunk = chunks[0]
 	chunks[0].position.y = 0
-	chunks.append(create_chunk('free_forest', 'forest_road'))
+	$chunks.add_child(chunks[0])
 	
+	chunks.append(get_next_chunk())
+	chunks[1].position.y = -chunks[1].size.y
+	$chunks.add_child(chunks[1])
 	# bg grad setup
 	bg_grad_size = normal_size*Vector2(1, 2.2) + Vector2(1, 0)*border_size*2
 	for i in range(len(bg_grad_colors)):
@@ -237,8 +241,12 @@ func chunks_generator_update():
 				chunks_offset_i += 1
 			else:
 				chunks.append(null)
-			chunks[nn % CHUNKS_BUFFER_SIZE] = create_chunk("forest1", "forest_road", chunks[next_i % CHUNKS_BUFFER_SIZE].position.y)
-		
+			var c = get_next_chunk()
+			chunks[nn % CHUNKS_BUFFER_SIZE] = c
+			c.position.y = chunks[next_i % CHUNKS_BUFFER_SIZE].position.y-c.size.y
+			$chunks.add_child(c)
+			
+			
 		current_chunk_i = next_i
 		current_chunk = chunks[current_chunk_i % CHUNKS_BUFFER_SIZE]
 
@@ -255,31 +263,35 @@ func bg_grad_update():
 			bg_grad[nn % len(bg_grad_colors)].position.y = -nn*bg_grad_size.y
 			
 		bg_grad_current = next_i
-		
 
-var _chunk_queue = []
+var _next_chunk = null
 
-func create_chunk(type, fallback_type, base_y=0, finish_points=null):
-	if finish_points == null and _chunk_queue.size() > 0:
-		var g = _chunk_queue[0]
-		if _connect_points[0] == g.start_points[0] and _connect_points[1] == g.start_points[1]:
-			_chunk_queue.remove(0)
-			_connect_points = g.finish_points
-			$chunks.add_child(g)
-			g.position.y = base_y-g.size.y
-			
-			return g
-		else:
-			return create_chunk(fallback_type, fallback_type, base_y, g.start_points)
-	else:
-		var t = _chunk_types[type]
-		var g = _chunk_classes[t["class"]].instance()
-		
-		g.create(_connect_points, finish_points, t, get_tree())
-		
-		_chunk_queue.insert(0, g)
-		return create_chunk(type, fallback_type, base_y)
+func get_next_chunk():
+	var fallback_type = "forest_road"
 	
+	if _next_chunk == null:
+		var type = fallback_type
+		if _chunk_path.size() > 0:
+			type = _chunk_path.pop_front()
+		
+		_next_chunk = create_chunk(type)
+	
+	var g = _next_chunk
+	if _connect_points[0] == g.start_points[0] and _connect_points[1] == g.start_points[1]:
+		_next_chunk = null
+	else:
+		g = create_chunk(fallback_type, g.start_points)
+	
+	_connect_points = g.finish_points
+	return g
+	
+func create_chunk(type, finish_points=null):
+	var t = _chunk_types[type]
+	var g = _chunk_classes[t["class"]].instance()
+		
+	g.create(_connect_points, finish_points, t, get_tree())
+	
+	return g
 
 onready var wall_check_ray = $wall_check
 
