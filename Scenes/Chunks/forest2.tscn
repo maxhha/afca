@@ -1,0 +1,166 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Obstacles/trunk.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/enemy1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Obstacles/bush.tscn" type="PackedScene" id=4]
+
+[node name="walls" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="left" type="CollisionPolygon2D" parent="."]
+z_index = 1536
+polygon = PoolVector2Array( 0, 0, 0, 1400, 690, 1400, 265.211, 1189.14, 160, 1000, 205.749, 800, 323.612, 600, 407.098, 400, 527, 200, 688.211, 0 )
+
+[node name="right" type="CollisionPolygon2D" parent="."]
+position = Vector2( 800, 0 )
+z_index = 1536
+polygon = PoolVector2Array( 1024, 0, 1024, 1400, 623.001, 1400, 740, 1200, 570, 990, 370, 780, 300, 610, 427.937, 318.931, 472.159, 185.361, 382.267, 1.03937 )
+
+[node name="trunk" parent="." instance=ExtResource( 2 )]
+position = Vector2( 955.249, 817.223 )
+rotation = 1.309
+
+[node name="trunk2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1016.5, 527.271 )
+rotation = 3.20465
+
+[node name="trunk3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 641.087, 822.221 )
+rotation = 4.04168
+
+[node name="trunk5" parent="." instance=ExtResource( 2 )]
+position = Vector2( 776.38, 1250 )
+rotation = 6.02138
+
+[node name="trunk4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 602.57, 1137.35 )
+rotation = 5.53494
+
+[node name="trunk6" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1035.11, 347.177 )
+rotation = 6.54498
+
+[node name="enemy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 468.193, 1147.77 )
+rotation = 1.80834
+
+[node name="enemy2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 517.563, 1092.81 )
+rotation = 1.80834
+
+[node name="enemy3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 575.656, 1028.86 )
+rotation = 1.80834
+
+[node name="enemy4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1400.08, 1161.13 )
+rotation = 1.80834
+
+[node name="enemy5" parent="." instance=ExtResource( 3 )]
+position = Vector2( 938.726, 1290.83 )
+rotation = 1.80834
+
+[node name="enemy6" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1000.93, 746.477 )
+rotation = 1.80834
+
+[node name="enemy7" parent="." instance=ExtResource( 3 )]
+position = Vector2( 586.739, 877.428 )
+rotation = 1.80834
+
+[node name="enemy8" parent="." instance=ExtResource( 3 )]
+position = Vector2( 540.011, 835.223 )
+rotation = 1.80834
+
+[node name="enemy11" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1030.96, 811.487 )
+rotation = 1.80834
+
+[node name="enemy12" parent="." instance=ExtResource( 3 )]
+position = Vector2( 460.096, 688.494 )
+rotation = 1.80834
+
+[node name="enemy13" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1130.97, 246.198 )
+rotation = 1.80834
+
+[node name="enemy14" parent="." instance=ExtResource( 3 )]
+position = Vector2( 997.7, 226.894 )
+rotation = 1.80834
+
+[node name="enemy15" parent="." instance=ExtResource( 3 )]
+position = Vector2( 531.587, 299.619 )
+rotation = 1.80834
+
+[node name="bush" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1400.26, 1295.03 )
+rotation = 0.994332
+
+[node name="bush2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1091.65, 857.834 )
+rotation = -5.23598
+
+[node name="bush16" parent="." instance=ExtResource( 4 )]
+position = Vector2( 743.706, 525.756 )
+rotation = -2.61799
+
+[node name="bush17" parent="." instance=ExtResource( 4 )]
+position = Vector2( 784.315, 453.441 )
+rotation = 1.0472
+
+[node name="bush18" parent="." instance=ExtResource( 4 )]
+position = Vector2( 636.986, 331.895 )
+rotation = -1.57079
+
+[node name="bush13" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1135.48, 445.378 )
+
+[node name="bush14" parent="." instance=ExtResource( 4 )]
+position = Vector2( 853.085, 416.943 )
+rotation = 2.35619
+
+[node name="bush15" parent="." instance=ExtResource( 4 )]
+position = Vector2( 697.026, 610.348 )
+rotation = 1.57079
+
+[node name="bush3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1277.61, 1164.54 )
+rotation = 0.785397
+
+[node name="bush4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1275.59, 1091.34 )
+rotation = -2.35619
+
+[node name="bush5" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1337.94, 1234.15 )
+rotation = -2.61799
+
+[node name="bush6" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1141.71, 975.882 )
+rotation = -2.35619
+
+[node name="bush7" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1222.07, 1055.8 )
+rotation = 2.87979
+
+[node name="bush8" parent="." instance=ExtResource( 4 )]
+position = Vector2( 764.401, 922.649 )
+rotation = 2.09439
+
+[node name="bush9" parent="." instance=ExtResource( 4 )]
+position = Vector2( 545.277, 682.982 )
+rotation = -1.309
+
+[node name="bush10" parent="." instance=ExtResource( 4 )]
+position = Vector2( 362.609, 600.357 )
+rotation = 0.523598
+
+[node name="bush11" parent="." instance=ExtResource( 4 )]
+position = Vector2( 421.675, 568.424 )
+rotation = 2.87979
+
+[node name="bush12" parent="." instance=ExtResource( 4 )]
+position = Vector2( 414.138, 503.608 )
+rotation = -0.785397

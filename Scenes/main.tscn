@@ -59,12 +59,19 @@ scale = Vector2( 0.2, 0.2 )
 z_index = 1025
 
 [node name="hide_area" type="Area2D" parent="cursor"]
-editor/display_folded = true
 monitorable = false
 collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="cursor/hide_area"]
+shape = SubResource( 1 )
+
+[node name="damage_area" type="Area2D" parent="cursor"]
+monitorable = false
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="cursor/damage_area"]
 shape = SubResource( 1 )
 
 [node name="camera_control" type="Node2D" parent="."]
@@ -114,9 +121,12 @@ color = Color( 1, 1, 1, 0 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
+autoplay = true
 mix_target = 1
 bus = "Music"
 
-[node name="hide_shield" type="Sprite" parent="."]
+[node name="sticky_cursor" type="Sprite" parent="."]
 position = Vector2( 987.101, 95.7635 )
+z_index = 1025
 texture = ExtResource( 10 )
+hframes = 2

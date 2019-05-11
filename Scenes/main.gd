@@ -1,12 +1,13 @@
 extends Node2D
 
-var _chunk_path = ['forest_road', 'free_forest', 'forest1', 'forest1']
+var _chunk_path = ['forest_road', 'free_forest', 'forest1', 'forest2','forest1', 'forest2', 'free_forest', 'free_forest']
 var _chunk_types = {}
 var _connect_points = null
 
 var _chunk_classes = {
 	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn"),
-	"forest1": preload("res://Scenes/Chunks/forest1.tscn")
+	"forest1": preload("res://Scenes/Chunks/forest1.tscn"),
+	'forest2': preload("res://Scenes/Chunks/forest2.tscn")
 }
 
 onready var player_units = $units.get_children()
@@ -15,24 +16,23 @@ onready var cursor = $cursor
 onready var pointer = $pointer
 onready var pointer_circle = $pointer/circle
 
-enum CURSOR_TYPE{NORMAL=0, DENIED=1, HIDE=2}
+enum CURSOR_TYPE{NORMAL=2, DENIED=3, HIDE=1, TARGET=0}
 var cursor_type = CURSOR_TYPE.NORMAL setget set_cursor_type
 
 var _cursor_normal = preload("res://Sprites/cursor/normal.png")
 var _cursor_denied = preload("res://Sprites/cursor/denied.png")
-var _cursor_hide = preload("res://Sprites/cursor/safe.png")
 var _cursor_center = _cursor_normal.get_size() / 2
 
 func set_cursor_type(t):
 	cursor_type = t
 	match t:
-		CURSOR_TYPE.NORMAL:
-			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
 		CURSOR_TYPE.DENIED:
 			Input.set_custom_mouse_cursor(_cursor_denied, Input.CURSOR_ARROW, _cursor_center)
-		CURSOR_TYPE.HIDE:
+		_:
 			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
-	$hide_shield.visible = t == CURSOR_TYPE.HIDE
+	
+	$sticky_cursor.frame = t if t < $sticky_cursor.hframes else 0
+	$sticky_cursor.visible = t == CURSOR_TYPE.HIDE or t == CURSOR_TYPE.TARGET
 
 signal game_over
 
@@ -86,6 +86,11 @@ func _ready():
 	t["min_border_size"] = border_size
 	
 	_chunk_types["forest1"] = t
+	
+	t = {'class':'forest2'}
+	t["min_border_size"] = border_size
+	
+	_chunk_types["forest2"] = t
 	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
@@ -168,7 +173,20 @@ func unit_control_process(delta):
 	pointer_circle.radius = current_unit.RUN_DISTANCE
 	var cpos = get_global_mouse_position()
 	
-	if current_unit.can_move():
+	var obj = $cursor/damage_area.get_overlapping_bodies()
+	obj = null if obj.size() == 0 else obj[0]
+	
+	if obj != null and current_unit.can_target(obj):
+		
+		$sticky_cursor.global_position = obj.global_position
+		$sticky_cursor.modulate.a = 1;
+		self.cursor_type = CURSOR_TYPE.TARGET
+		
+		if Input.is_action_just_pressed("click"):
+			current_unit.attack_to(obj)
+			next_unit()
+	
+	elif current_unit.can_move():
 		
 		var h = get_hiding_point(cpos, current_unit.OFFSET_SIZE)
 		
@@ -178,13 +196,11 @@ func unit_control_process(delta):
 			if h.owned_by != null or not no_wall_on_path(current_unit.global_position, cpos):
 				self.cursor_type = CURSOR_TYPE.DENIED
 			else:
-				$hide_shield.global_position = cpos
+				$sticky_cursor.global_position = cpos
 				var x = h.parent.get_parent().block_propability
-				$hide_shield.modulate.a = 2*x - x*x
+				$sticky_cursor.modulate.a = 2*x - x*x
 				self.cursor_type = CURSOR_TYPE.HIDE
-				
-				
-				
+
 				if Input.is_action_just_pressed("click"):
 					current_unit.hide_at(h)
 					next_unit()

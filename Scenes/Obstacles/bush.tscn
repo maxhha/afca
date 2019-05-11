@@ -7,11 +7,14 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 43.9839
 
-[node name="bush" type="KinematicBody2D"]
+[node name="bush" type="KinematicBody2D" groups=[
+"obstacle",
+]]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource( 1 )
 block_propability = 0.3
+ignore = false
 
 [node name="sprite" type="Sprite" parent="."]
 scale = Vector2( 0.6, 0.6 )
@@ -19,9 +22,6 @@ z_index = 16
 texture = ExtResource( 2 )
 offset = Vector2( -16, -16 )
 hframes = 3
-
-[node name="shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
 
 [node name="hide" type="Area2D" parent="."]
 monitoring = false
@@ -35,3 +35,6 @@ shape = SubResource( 1 )
 [node name="unit_poses" type="Node2D" parent="hide"]
 
 [node name="Position2D" type="Position2D" parent="hide/unit_poses"]
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )

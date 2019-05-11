@@ -22,7 +22,7 @@ position = Vector2( 443, 1231 )
 rotation = 0.172738
 
 [node name="trunk2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 795, 1187 )
+position = Vector2( 870, 1184 )
 rotation = -0.0974631
 
 [node name="trunk4" parent="." instance=ExtResource( 2 )]
@@ -42,7 +42,7 @@ position = Vector2( 656, 1333 )
 rotation = 1.80834
 
 [node name="enemy2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 786, 1107 )
+position = Vector2( 915, 1089 )
 rotation = 1.16579
 
 [node name="enemy3" parent="." instance=ExtResource( 3 )]

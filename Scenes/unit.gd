@@ -3,7 +3,7 @@ extends KinematicBody2D
 const SHOOT_RAND = PI/12
 const RUN_DISTANCE = 450
 const ATTACK_DISTANCE = 325
-const MOVE_SPEED = 400
+const MOVE_SPEED = 500
 const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 0.5
 const STAND_TIME = 2
@@ -12,7 +12,7 @@ const ROTATE_SPEED = PI / 0.3
 
 const HIDING_TIME = 2
 
-enum STATES{STAND, MOVE, AIM, ATTACK, HIDE, HIDING, STANDUP, DEATH}
+enum STATES{STAND, MOVE, AIM, ATTACK, HIDE, HIDING, STANDUP, TARGETTING, DEATH}
 var STATE = STATES.STAND
 
 var linear_vel = Vector2()
@@ -28,7 +28,7 @@ func set_owned_hide_point(p):
 
 signal dead
 
-var health = 5 setget set_health
+var health = 7 setget set_health
 
 func set_health(h):
 	health = h
@@ -41,6 +41,7 @@ func set_health(h):
 var _target
 var _target_pos
 var _target_rot
+var _next 
 var _targeting = false
 
 var timer = 0
@@ -74,17 +75,24 @@ func _physics_process(delta):
 				if cos(rotation - _owned_hide_point.get_rotation()) > 0.99:
 					start_hiding()
 		
-		STATES.HIDING:
-			timer -= delta
-			if timer <= 0:
-				start_standup(_owned_hide_point.get_stand_rotation())
-				
-		
 		STATES.STANDUP:
 			timer -= delta
 			if timer <= 0 and cos(rotation - _target_rot) > 0.99:
-				STATE = STATES.STAND
-				timer = STAND_TIME
+				
+				if _next == null:
+					STATE = STATES.STAND
+					timer = STAND_TIME
+				else:
+					callv(_next['t'],_next['a'])
+		
+		STATES.TARGETTING:
+			if not is_instance_valid(_target):
+				if _owned_hide_point:
+					hide_at(_owned_hide_point)
+				else:
+					STATE = STATES.STAND
+			elif can_attack(_target):
+				start_attack(_target, {'t':"attack_to", "a": [_target]})
 	#action
 	match STATE:
 		STATES.STAND:
@@ -99,7 +107,10 @@ func _physics_process(delta):
 		STATES.ATTACK:
 			timer = max(timer - delta, 0)
 			if timer == 0:
-				STATE = STATES.STAND
+				if _next:
+					callv(_next['t'], _next['a'])
+				else:
+					STATE = STATES.STAND
 		
 		STATES.HIDE:
 			if _target_pos.distance_to(global_position) > MOVE_SPEED*delta:
@@ -110,6 +121,9 @@ func _physics_process(delta):
 				rotate_to(_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
 		STATES.STANDUP:
 			rotate_to(_target_rot, ROTATE_SPEED*delta)
+		STATES.TARGETTING:
+			if is_instance_valid(_target):
+				rotate_to((_target.global_position - global_position).angle(),ROTATE_SPEED*delta)
 	
 	#animation
 	match STATE:
@@ -172,10 +186,22 @@ func look(point):
 			rotation = r
 
 func can_move():
-	return STATE == STATES.STAND or STATE == STATES.HIDING or STATE == STATES.ATTACK
+	return STATE == STATES.STAND or STATE == STATES.HIDING or STATE == STATES.ATTACK or STATE == STATES.TARGETTING
+
+func attack_to(obj):
+	if not is_instance_valid(obj):
+		start_targetting(obj)
+	elif STATE == STATES.HIDING:
+		start_standup(_owned_hide_point.get_stand_rotation(), {'t':'start_targetting', 'a':[obj]})
+	else:
+		start_targetting(obj)
+
+func start_targetting(obj):
+	_target = obj
+	STATE = STATES.TARGETTING 
 
 func is_hiding():
-	return STATE == STATES.HIDING
+	return STATE == STATES.HIDING or STATE == STATES.STANDUP
 
 func start_hiding():
 	STATE = STATES.HIDING
@@ -205,9 +231,30 @@ func get_nearest_enemy():
 	
 	return e_min
 
+func can_target(e):
+	if e.global_position.distance_to(global_position) > ATTACK_DISTANCE:
+		return false
+	$ray_walls.cast_to = e.global_position - global_position
+	$ray_walls.rotation = -rotation
+	
+	$ray_walls.clear_exceptions()
+	
+	for i in _ignore:
+		$ray_walls.add_exception(i)
+	
+	while true:
+		$ray_walls.force_raycast_update()
+		if not $ray_walls.is_colliding():
+			return true
+		if $ray_walls.get_collider().is_in_group('obstacle'):
+			$ray_walls.add_exception($ray_walls.get_collider())
+			continue
+		return false
+
 func can_attack(e):
 	if e.global_position.distance_to(global_position) > ATTACK_DISTANCE:
 		return false
+	
 	$ray_walls.cast_to = e.global_position - global_position
 	$ray_walls.rotation = -rotation
 	
@@ -232,12 +279,13 @@ func can_attack(e):
 
 var Bullet = preload("res://Scenes/bullet.tscn")
 
-func start_attack(e):
+func start_attack(e, next=null):
 	_target = e
 	linear_vel = Vector2()
 	STATE = STATES.ATTACK
 	timer = ATTACK_TIMEOUT
 	rotation = (e.global_position - global_position).angle()
+	_next = next
 	shoot()
 
 func get_damage(dmg):
@@ -248,10 +296,11 @@ func get_damage(dmg):
 	elif STATE != STATES.DEATH and _owned_hide_point:
 		hide_at(_owned_hide_point)
 
-func start_standup(target_rot=rotation):
+func start_standup(target_rot=rotation, next=null):
 	STATE = STATES.STANDUP
 	timer = STANDUP_TIMER
 	_target_rot = target_rot
+	_next = next
 
 func is_free_move_to(p):
 	return global_position.distance_to(p) <= RUN_DISTANCE and not test_move(transform, p - global_position, false)

@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const SHOOT_RAND = PI/12
 const ATTACK_DISTANCE = 325
-const MOVE_SPEED = 300
+const MOVE_SPEED = 400
 const HIDE_TIME = 0.2
 const HIDING_TIME = 2
 const STAND_TIME = 2
@@ -231,14 +231,17 @@ func get_nearest_enemy():
 	
 	var d_min
 	var e_min
+	var c 
 	
 	for e in enemies:
-		if e.is_queued_for_deletion():
+		if not is_instance_valid(e):
 			continue
 		var d = e.global_position.distance_to(global_position) 
-		if e_min == null or d_min > d:
+		var cc = can_attack(e)
+		if e_min == null or ((cc == c and d_min > d) or (not c and cc)):
 			d_min = d
 			e_min = e
+			c = cc
 	
 	return e_min
 
