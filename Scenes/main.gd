@@ -150,7 +150,7 @@ func _on_screen_resize():
 	var normal_s = Vector2(1024, 600)
 	var new_s = get_viewport_rect().size
 	var k = 1 / max(new_s.x / normal_s.x, new_s.y / normal_s.y) - 1
-	$camera_control/camera.zoom = Vector2.ONE * (abs(k)*0.5*sign(k) + 1)
+	$camera_control/camera.zoom = Vector2.ONE * (abs(k)*0.1*sign(k) + 1)
 
 #func next_unit():
 #	current = (1 + current) % len(player_units)

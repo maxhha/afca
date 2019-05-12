@@ -3,12 +3,12 @@ extends KinematicBody2D
 const SHOOT_RAND = PI/16
 #const RUN_DISTANCE = 450
 #const ATTACK_DISTANCE = 325
-const MOVE_SPEED = 500
+const MOVE_SPEED = 200
 const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 1.0/5
 #const STAND_TIME = 2
 #const STANDUP_TIMER = 0.3
-const BODY_ROTATE_SPEED = PI/2
+const BODY_ROTATE_SPEED = PI/4
 const ROTATE_SPEED = PI / 0.3
 
 enum STATES {MOVE}
