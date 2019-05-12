@@ -3,13 +3,13 @@ extends KinematicBody2D
 const SHOOT_RAND = PI/12
 const RUN_DISTANCE = 450
 const ATTACK_DISTANCE = 450
-const MOVE_SPEED = 500
+export (float) var MOVE_SPEED = 500
 const MIN_SPEED = 0.4
-const ATTACK_TIMEOUT = 0.5
+export (float) var ATTACK_TIMEOUT = 0.5
 const STAND_TIME = 2
 const STANDUP_TIMER = 0.3
 const ROTATE_SPEED = PI / 0.3
-
+export (int) var MAX_HEALTH = 3
 const SLIDE_ACCUM_PWR = 100
 
 const START_FOLLOW_DISTANCE = 400
@@ -56,6 +56,7 @@ var timer = 0
 var _slide_vel_accum = Vector2()
 
 func _ready():
+	health = MAX_HEALTH
 	$sprite.material = $sprite.material.duplicate()
 	rotation = PI / 4 * ( - 3 + randf() * 2)
 
@@ -190,7 +191,7 @@ func _physics_process(delta):
 				b.add_collision_exception_with(i)
 			
 			get_parent().add_child(b)
-			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
+			b.global_position = $shoot_point.global_position
 
 const FOLLOW_DISTANCE = 100
 const FOLLOW_DISTANCE_HIDING_Y = 200

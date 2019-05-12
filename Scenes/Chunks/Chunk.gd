@@ -11,6 +11,8 @@ var count_points
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func create(connect_points, finish_points, props, tree):
 	pass
 
@@ -255,6 +257,8 @@ func prepeare_chunk(min_border_size):
 	start_points = [left[2].x,right[2].x]
 	size = right[1]
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func connect_chunk(connect_points, border_size):
 	
 	var left = $left.polygon

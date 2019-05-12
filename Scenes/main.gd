@@ -56,6 +56,7 @@ func _ready():
 	Input.set_custom_mouse_cursor(preload("res://Sprites/cursor/target.png"), Input.CURSOR_ARROW, Vector2(32,32))
 	$UI/white_screen.show()
 	
+	global.main = self
 	global.player = $player
 	$player.connect('dead', self, '_on_player_death')
 	
@@ -116,6 +117,9 @@ func _ready():
 	_on_screen_resize()
 # warning-ignore:return_value_discarded
 	get_tree().connect("screen_resized", self, "_on_screen_resize")
+
+func camera_shake(pwr):
+	$camera_control.shake(pwr)
 
 func _on_player_death():
 	global.player = null

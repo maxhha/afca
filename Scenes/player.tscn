@@ -1,17 +1,23 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scenes/player.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/btr_body.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/glow.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/btr_ligit.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/btr_gun.png" type="Texture" id=5]
-[ext_resource path="res://Sound/shoot2.wav" type="AudioStream" id=6]
+[ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
+[ext_resource path="res://Sprites/btr_body.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/glow.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/btr_ligit.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/btr_gun.png" type="Texture" id=6]
+[ext_resource path="res://Sound/shoot2.wav" type="AudioStream" id=7]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 43.9097
 height = 38.8728
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 2 )
+shader_param/k = null
+shader_param/color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="Animation" id=3]
 length = 0.2
 step = 0.01
 tracks/0/type = "value"
@@ -27,7 +33,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( -16, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:position")
@@ -43,10 +49,10 @@ tracks/0/keys = {
 }
 
 [sub_resource type="AudioStreamRandomPitch" id=5]
-audio_stream = ExtResource( 6 )
+audio_stream = ExtResource( 7 )
 
 [sub_resource type="AudioStreamRandomPitch" id=6]
-audio_stream = ExtResource( 6 )
+audio_stream = ExtResource( 7 )
 
 [sub_resource type="CircleShape2D" id=7]
 radius = 231.068
@@ -72,8 +78,10 @@ rotation = 1.57079
 shape = SubResource( 1 )
 
 [node name="sprite" type="Sprite" parent="."]
+editor/display_folded = true
+material = SubResource( 2 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 offset = Vector2( 0, 3 )
 
 [node name="shadow" type="Sprite" parent="sprite"]
@@ -82,23 +90,23 @@ show_behind_parent = true
 position = Vector2( -40, 1 )
 rotation = 1.57079
 scale = Vector2( 1.24705, 2.12202 )
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 
 [node name="glow" type="Sprite" parent="sprite"]
 show_behind_parent = true
-texture = ExtResource( 4 )
+texture = ExtResource( 5 )
 offset = Vector2( 0, 3 )
 
 [node name="gun" type="Position2D" parent="sprite"]
 position = Vector2( -48, 0 )
 
 [node name="sprite" type="Sprite" parent="sprite/gun"]
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 offset = Vector2( 48, 0 )
 
 [node name="anim" type="AnimationPlayer" parent="sprite/gun/sprite"]
-anims/shoot = SubResource( 2 )
-anims/stand = SubResource( 3 )
+anims/shoot = SubResource( 3 )
+anims/stand = SubResource( 4 )
 
 [node name="shoot_points" type="Node2D" parent="sprite/gun"]
 
@@ -169,7 +177,6 @@ collision_mask = 4
 
 [node name="area" type="CollisionShape2D" parent="hide_area"]
 position = Vector2( 89.8705, -0.491088 )
-scale = Vector2( 1, 1 )
 shape = SubResource( 7 )
 
 [node name="ui" type="CanvasLayer" parent="."]

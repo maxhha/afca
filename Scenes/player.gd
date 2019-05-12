@@ -77,8 +77,13 @@ func _physics_process(delta):
 
 const HIDE_AREA_TIMEOUT = 1
 var _place_hide_area_timer = 1
+var _damaged_timer = 0
 
 func _process(delta):
+	_damaged_timer = max(_damaged_timer - delta, 0)
+	var k = ease(_damaged_timer / DAMAGED_EFF_T, 0.5)
+	$sprite.get_material().set_shader_param('k', k)
+	
 	_place_hide_area_timer += delta
 	if _place_hide_area_timer > HIDE_AREA_TIMEOUT:
 		_place_hide_area_timer = 0
@@ -151,8 +156,10 @@ func set_health(s):
 	if s <= 0:
 		emit_signal('dead')
 		queue_free()
-		
+
+const DAMAGED_EFF_T = 0.2
 
 func get_damage(dmg):
 	self.health -= dmg
-	
+	global.camera_shake(0.5)
+	_damaged_timer = DAMAGED_EFF_T

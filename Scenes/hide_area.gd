@@ -31,12 +31,14 @@ class SoftHidePoint:
 	extends HidePoint
 	func _init(parent, pos).(parent, pos, 0):
 		pass
+# warning-ignore:unused_argument
 	func to_global(offset):
 		return parent.to_global(pos)
 	func get_rotation():
 		return owned_by.rotation if owned_by else randf()*TAU
 	func get_stand_rotation():
 		return get_rotation()
+# warning-ignore:unused_argument
 	func match_side(p):
 		return true
 

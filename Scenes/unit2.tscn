@@ -1,13 +1,13 @@
 [gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://Scenes/unit.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/unit2.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
-[ext_resource path="res://Sprites/solder_run_0.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/solder_hiding_0.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/solder_hiding_1.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/solder.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/solder_run_1.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/solder_run_2.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/unit_hard/1.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/unit_hard/3.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/unit_hard/5.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/unit_hard/6.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/unit_hard/2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/unit_hard/4.png" type="Texture" id=8]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ShaderMaterial" id=1]
@@ -55,10 +55,13 @@ radius = 623.395
 collision_layer = 2
 collision_mask = 0
 script = ExtResource( 1 )
+MOVE_SPEED = 250.0
+ATTACK_TIMEOUT = 0.2
+MAX_HEALTH = 5
 
 [node name="sprite" type="AnimatedSprite" parent="."]
 material = SubResource( 1 )
-position = Vector2( 0.250351, 0.760864 )
+position = Vector2( 0.104813, 1.27792 )
 rotation = 1.5708
 scale = Vector2( 0.3, 0.3 )
 frames = SubResource( 2 )
@@ -66,7 +69,7 @@ animation = "stand_down"
 offset = Vector2( -14, -81 )
 
 [node name="shape" type="CollisionShape2D" parent="."]
-position = Vector2( 0.250351, -0.138744 )
+position = Vector2( 0.104813, 0.378311 )
 shape = SubResource( 3 )
 
 [node name="view_area" type="Area2D" parent="."]
@@ -79,12 +82,13 @@ collision_mask = 8
 shape = SubResource( 4 )
 
 [node name="ray_walls" type="RayCast2D" parent="."]
-position = Vector2( 0.250351, 10.0138 )
+position = Vector2( 0.104813, 10.5308 )
 collision_mask = 17
 
 [node name="shoot1" parent="." instance=ExtResource( 9 )]
-position = Vector2( 0.250351, 10.0138 )
+position = Vector2( 0.104813, 10.5308 )
+volume_db = -6.0
 max_distance = 600.0
 
 [node name="shoot_point" type="Position2D" parent="."]
-position = Vector2( 70.9787, 9.79016 )
+position = Vector2( 71.7099, 20.0479 )
