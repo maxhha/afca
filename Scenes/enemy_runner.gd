@@ -1,10 +1,11 @@
 extends KinematicBody2D
 
 const SHOOT_RAND = PI/12
-const ATTACK_DISTANCE = 325
+const ATTACK_DISTANCE = 450
 const MOVE_SPEED = 400
 const HIDE_TIME = 0.2
-const HIDING_TIME = 2
+const HIDING_TIME_MIN = 1
+const HIDING_TIME_MAX = 1.5
 const STAND_TIME = 2
 const STANDUP_TIMER = 0.3
 const ROTATE_SPEED = PI / 0.3
@@ -163,7 +164,7 @@ func start_hiding():
 	STATE = STATES.HIDING
 	global_position = _target_pos
 	rotation = _owned_hide_point.get_rotation()
-	timer = HIDING_TIME
+	timer = lerp(HIDING_TIME_MIN, HIDING_TIME_MAX, randf())
 	_target = null
 	linear_vel = Vector2()
 

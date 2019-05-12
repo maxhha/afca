@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Obstacles/Obstacle.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/trunk.png" type="Texture" id=2]
@@ -8,6 +8,9 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 99.0179, 15.2079 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 97.9833, 20.7767 )
 
 [node name="trunk" type="KinematicBody2D" groups=[
 "obstacle",
@@ -30,11 +33,6 @@ position = Vector2( -0.888977, 13.1336 )
 rotation = -0.129466
 scale = Vector2( 1.03279, 0.3 )
 texture = ExtResource( 3 )
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-position = Vector2( 0.800079, -11.8202 )
-scale = Vector2( 0.9, 0.9 )
-polygon = PoolVector2Array( -120.765, -4.19312, -118.933, 69.5472, -43.2563, 44.7141, 41.3114, 32.265, 117.304, 37.0721, 126.86, -5.67548, 95.8169, -35.5694, 39.8803, -21.8742, -67.5793, -5.9752 )
 
 [node name="hide" type="Area2D" parent="."]
 position = Vector2( 0.800079, -11.8202 )
@@ -84,3 +82,8 @@ texture = ExtResource( 5 )
 position = Vector2( -78.4504, -6.23501 )
 rotation = -1.69161
 texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -2.03906, 0.611717 )
+rotation = -0.159518
+shape = SubResource( 2 )

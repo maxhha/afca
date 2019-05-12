@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const SHOOT_RAND = PI/16
+const SHOOT_RAND = PI/20
 #const RUN_DISTANCE = 450
 #const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 200
@@ -10,6 +10,8 @@ const ATTACK_TIMEOUT = 1.0/5
 #const STANDUP_TIMER = 0.3
 const BODY_ROTATE_SPEED = PI/4
 const ROTATE_SPEED = PI / 0.3
+
+const MAX_HEALTH = 20
 
 enum STATES {MOVE}
 var STATE = STATES.MOVE
@@ -21,6 +23,30 @@ var current_sh_p = 0
 var linear_vel = Vector2()
 
 var _attack_timer = 0
+
+class UnitPoint:
+	var owned_by
+	var pos
+	var parent
+	func _init(parent, pos):
+		self.parent = parent
+		self.pos = pos
+	
+	func to_global():
+		return parent.to_global(pos)
+	
+	func own(o=null):
+		owned_by = o 
+		if o != null:
+			o.connect('dead', self, 'own', [null])
+
+var units_points = []
+
+func _ready():
+	for i in $units_poses.get_children():
+		units_points.append(UnitPoint.new(self, i.position))
+	$units_poses.free()
+	$ui/health.max_value = MAX_HEALTH
 
 func _physics_process(delta):
 	linear_vel = move_and_slide(linear_vel)
@@ -51,6 +77,28 @@ func _physics_process(delta):
 	
 	_attack_timer -= delta
 
+const HIDE_AREA_TIMEOUT = 1
+var _place_hide_area_timer = 1
+
+func _process(delta):
+	_place_hide_area_timer += delta
+	if _place_hide_area_timer > HIDE_AREA_TIMEOUT:
+		_place_hide_area_timer = 0
+		for p in units_points:
+			if p.owned_by == null:
+				continue
+			var u = p.owned_by
+			if u._owned_hide_point:
+				continue
+			for a in $hide_area.get_overlapping_areas():
+				if a.global_position.y >= global_position.y + 100 or a.is_owned_by_enemy():
+					continue
+				
+				if a.global_position.y < global_position.y + 100:
+					var h = a.get_nearest_free_point_to(u.global_position, global_position)
+					if h:
+						u.hide_at(h)
+		
 func rotate_to(rot, r, step):
 	r = deg2rad(rad2deg(r))
 	var c = acos(cos(r - rot))
@@ -75,4 +123,29 @@ func shoot():
 	shoot_points[current_sh_p].get_node('snd').play()
 	current_sh_p = (current_sh_p + 1) % shoot_points.size()
 	$sprite/gun/sprite/anim.play('shoot')
+
+func get_nearest_point_to(pos):
+	var d_min
+	var p_min
+	var i = 0
+	for p in units_points:
+		var d = p.to_global().distance_to(pos) - i*64
+		if p.owned_by == null and (d_min == null or d_min > d):
+			d_min = d
+			p_min = p
+		i += 1
+	return p_min
+
+var health = MAX_HEALTH setget set_health
+signal dead
+func set_health(s):
+	health = s
+	$ui/health.value = health
+	if s <= 0:
+		emit_signal('dead')
+		queue_free()
+		
+
+func get_damage(dmg):
+	self.health -= dmg
 	

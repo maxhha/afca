@@ -24,6 +24,8 @@ class HidePoint:
 		return parent.global_transform.basis_xform(normal).angle()
 	func get_stand_rotation():
 		return parent.global_transform.basis_xform(normal).rotated(PI).angle()
+	func match_side(p):
+		return parent.to_local(p).dot(normal) >= 0
 
 class SoftHidePoint:
 	extends HidePoint
@@ -35,6 +37,8 @@ class SoftHidePoint:
 		return owned_by.rotation if owned_by else randf()*TAU
 	func get_stand_rotation():
 		return get_rotation()
+	func match_side(p):
+		return true
 
 var points = []
 
@@ -58,16 +62,18 @@ func _on_point_own(p, n):
 	if n:
 		n.add_ignore(get_parent())
 
-func get_nearest_free_point_to(pos):
+func get_nearest_free_point_to(pos, side_pos = null):
+	
 	var min_d
 	var min_p
 	var d1 = to_local(pos)
 	for p in points:
 		var d = (p.pos - d1).length()
-		if p.is_free() and (min_p == null or d < min_d):
+		if p.is_free() and (side_pos == null or p.match_side(side_pos)) and (min_p == null or d < min_d):
 			min_d = d
 			min_p = p
 	return min_p
+	
 
 func get_hiding_objects():
 	var list = []
@@ -75,3 +81,11 @@ func get_hiding_objects():
 		if p.owned_by and p.owned_by.is_hiding():
 			list.append(p.owned_by)
 	return list
+
+func is_owned_by_enemy():
+
+	for em in points:
+		if em.owned_by and em.owned_by.is_in_group('enemy'):
+			return true
+			
+	return false

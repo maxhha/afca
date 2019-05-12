@@ -10,4 +10,4 @@ func get_ignore_objects():
 		return []
 
 func can_pass(obj):
-	return randf() >= block_propability
+	return randf() >= block_propability or obj.z_index > 100

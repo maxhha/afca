@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform float k;
-uniform vec4 color : hint_color;
+uniform vec4 color : hint_color = vec4(1.0);
 
 void fragment(){
 	vec4 c = texture(TEXTURE, UV);

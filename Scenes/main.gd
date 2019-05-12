@@ -13,8 +13,8 @@ var _chunk_classes = {
 #onready var player_units = $units.get_children()
 
 onready var cursor = $cursor
-onready var pointer = $pointer
-onready var pointer_circle = $pointer/circle
+#onready var pointer = $pointer
+#onready var pointer_circle = $pointer/circle
 
 #enum CURSOR_TYPE{NORMAL=2, DENIED=3, HIDE=1, TARGET=0}
 #var cursor_type = CURSOR_TYPE.NORMAL setget set_cursor_type
@@ -57,6 +57,7 @@ func _ready():
 	$UI/white_screen.show()
 	
 	global.player = $player
+	$player.connect('dead', self, '_on_player_death')
 	
 	randomize()
 #	current_unit = player_units[current]
@@ -110,12 +111,15 @@ func _ready():
 	bg_grad_size = normal_size*Vector2(1, 2.2) + Vector2(1, 0)*border_size*2
 	for i in range(len(bg_grad_colors)):
 		bg_grad.append(create_bg_grad(i))
-	
+# warning-ignore:return_value_discarded
 	connect("game_over", self, '_on_game_over')
-	
+	_on_screen_resize()
 # warning-ignore:return_value_discarded
 	get_tree().connect("screen_resized", self, "_on_screen_resize")
 
+func _on_player_death():
+	global.player = null
+	emit_signal("game_over")
 
 #func _on_player_unit_death(p):
 #	var i = player_units.find(p)

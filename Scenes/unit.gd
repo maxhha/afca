@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const SHOOT_RAND = PI/12
 const RUN_DISTANCE = 450
-const ATTACK_DISTANCE = 325
+const ATTACK_DISTANCE = 450
 const MOVE_SPEED = 500
 const MIN_SPEED = 0.4
 const ATTACK_TIMEOUT = 0.5
@@ -10,13 +10,19 @@ const STAND_TIME = 2
 const STANDUP_TIMER = 0.3
 const ROTATE_SPEED = PI / 0.3
 
-const HIDING_TIME = 2
+const SLIDE_ACCUM_PWR = 100
 
-enum STATES{STAND, MOVE, AIM, ATTACK, HIDE, HIDING, STANDUP, TARGETTING, DEATH}
+const START_FOLLOW_DISTANCE = 400
+
+const HIDING_TIME_MIN = 1
+const HIDING_TIME_MAX = 2
+
+enum STATES{STAND, MOVE, AIM, ATTACK, HIDE, HIDING, STANDUP, TARGETTING, DEATH, FOLLOW}
 var STATE = STATES.STAND
 
 var linear_vel = Vector2()
 
+var _owned_ship_point 
 var _owned_hide_point setget set_owned_hide_point
 
 func set_owned_hide_point(p):
@@ -34,6 +40,7 @@ func set_health(h):
 	health = h
 	if h <= 0:
 		self._owned_hide_point = null
+		_owned_ship_point.own()
 		STATE = STATES.DEATH
 		emit_signal("dead")
 		queue_free()
@@ -43,8 +50,10 @@ var _target_pos
 var _target_rot
 var _next 
 var _targeting = false
+var _is_hiding = false
 
 var timer = 0
+var _slide_vel_accum = Vector2()
 
 func _ready():
 	$sprite.material = $sprite.material.duplicate()
@@ -57,24 +66,31 @@ func _physics_process(delta):
 	#update
 	match STATE:
 		STATES.STAND:
-			var e = get_nearest_enemy()
-			
-			timer -= delta
-			
-			if e:
-				if can_attack(e):
-					start_attack(e)
-				elif _owned_hide_point and timer <= 0:
-					hide_at(_owned_hide_point)
+			if not should_follow():
+				var e = get_nearest_enemy()
+				
+				timer -= delta
+				
+				if e:
+					if can_attack(e):
+						start_attack(e)
+					elif _owned_hide_point and timer <= 0:
+						hide_at(_owned_hide_point)
+					else:
+						rotation = (e.global_position - global_position).angle()
 				else:
-					rotation = (e.global_position - global_position).angle()
-			else:
-				if _owned_hide_point and timer <= 0:
-					hide_at(_owned_hide_point)
+					if _owned_hide_point and timer <= 0:
+						hide_at(_owned_hide_point)
 		STATES.HIDE:
 			if _target_pos.distance_to(global_position) <= MOVE_SPEED*delta:
 				if cos(rotation - _owned_hide_point.get_rotation()) > 0.99:
 					start_hiding()
+		
+		STATES.HIDING:
+			if not should_follow():
+				timer -= delta
+				if timer <= 0:
+					start_standup(_owned_hide_point.get_stand_rotation())
 		
 		STATES.STANDUP:
 			timer -= delta
@@ -99,12 +115,13 @@ func _physics_process(delta):
 		STATES.STAND:
 			linear_vel = linear_vel.linear_interpolate(Vector2.ZERO, 0.4)
 		STATES.MOVE:
+			
 			var d = _target - global_position
 			if d.length() <= MOVE_SPEED*delta:
 				STATE = STATES.STAND
 			else:
 				linear_vel = d.normalized() * MOVE_SPEED
-		
+			
 		STATES.ATTACK:
 			timer = max(timer - delta, 0)
 			if timer == 0:
@@ -119,12 +136,12 @@ func _physics_process(delta):
 			else:
 				global_position = _target_pos
 				linear_vel = Vector2()
-				rotate_to(_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
+				rotation = rotate_to(rotation,_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
 		STATES.STANDUP:
-			rotate_to(_target_rot, ROTATE_SPEED*delta)
+			rotation = rotate_to(rotation,_target_rot, ROTATE_SPEED*delta)
 		STATES.TARGETTING:
 			if is_instance_valid(_target):
-				rotate_to((_target.global_position - global_position).angle(),ROTATE_SPEED*delta)
+				rotation = rotate_to(rotation,(_target.global_position - global_position).angle(),ROTATE_SPEED*delta)
 	
 	#animation
 	match STATE:
@@ -140,6 +157,20 @@ func _physics_process(delta):
 				rotation = linear_vel.angle()
 				_targeting = false
 			$sprite.play('run')
+		
+		STATES.FOLLOW:
+			if linear_vel.length() > MIN_SPEED:
+				var e = get_nearest_enemy()
+				if e:
+					_targeting = true
+					rotation = (e.global_position - global_position).angle()
+				elif linear_vel.length() >= MIN_SPEED:
+					rotation = linear_vel.angle()
+					_targeting = false
+				$sprite.play('run')
+			else:
+				$sprite.play('stand')
+		
 		STATES.STANDUP:
 			$sprite.play('stand_up')
 		
@@ -161,6 +192,32 @@ func _physics_process(delta):
 			get_parent().add_child(b)
 			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 
+const FOLLOW_DISTANCE = 100
+const FOLLOW_DISTANCE_HIDING = 800
+
+func should_follow():
+	if _owned_ship_point and global.player:
+		var p = _owned_ship_point.to_global()
+		if (not _is_hiding and p.distance_to(global_position) > FOLLOW_DISTANCE) or global_position.y - global.player.global_position.y > 200:
+			move_to(p+global.player.linear_vel * FOLLOW_DISTANCE*2 / MOVE_SPEED)
+			
+			return true
+		if _owned_hide_point != null and _owned_hide_point.parent.is_owned_by_enemy():
+			
+			move_to(p+global.player.linear_vel * FOLLOW_DISTANCE*2 / MOVE_SPEED)
+			return true
+	
+	elif global.player:
+		if global.player.global_position.distance_to(global_position) <= START_FOLLOW_DISTANCE:
+			_owned_ship_point = global.player.get_nearest_point_to(global_position)
+			
+			if _owned_ship_point:
+				_owned_ship_point.own(self)
+	
+	return false
+
+func start_follow():
+	STATE = STATES.FOLLOW
 
 const DAMAGED_EFF_T = 0.2
 var _damaged_timer = 0
@@ -170,21 +227,23 @@ func _process(delta):
 	var k = ease(_damaged_timer / DAMAGED_EFF_T, 0.5)
 	$sprite.get_material().set_shader_param('k', k)
 
-func rotate_to(r, step):
+func rotate_to(rot, r, step):
 	r = deg2rad(rad2deg(r))
-	var c = acos(cos(r - rotation))
+	var c = acos(cos(r - rot))
 	
 	if c < step:
-		rotation = r 
+		rot = r 
 	else:
-		var d = sign(sin(r - rotation))
+		var d = sign(sin(r - rot))
 		if d == 0:
 			d = randi() % 2 * 2 - 1
-		rotation += d * step
+		rot += d * step
+	return rot
 
 func move_to(point):
 	_target = point
 	self._owned_hide_point = null
+	_is_hiding = false
 	STATE = STATES.MOVE
 
 func look(point):
@@ -217,7 +276,7 @@ func start_hiding():
 	STATE = STATES.HIDING
 	global_position = _target_pos
 	rotation = _owned_hide_point.get_rotation()
-	timer = HIDING_TIME
+	timer = lerp(HIDING_TIME_MIN, HIDING_TIME_MAX,randf())
 	_target = null
 	linear_vel = Vector2()
 
@@ -260,6 +319,17 @@ func can_target(e):
 			$ray_walls.add_exception($ray_walls.get_collider())
 			continue
 		return false
+
+func check_wall_ray(pos):
+	var r = pos - global_position
+	r = r.normalized()*(r.length() + OFFSET_SIZE)
+	$ray_walls.cast_to = r
+
+	$ray_walls.global_rotation = 0
+	
+	$ray_walls.clear_exceptions()
+	$ray_walls.force_raycast_update()
+	return $ray_walls.is_colliding()
 
 func can_attack(e):
 	if e.global_position.distance_to(global_position) > ATTACK_DISTANCE:
@@ -314,7 +384,7 @@ func start_standup(target_rot=rotation, next=null):
 	_next = next
 
 func is_free_move_to(p):
-	return global_position.distance_to(p) <= RUN_DISTANCE and not test_move(transform, p - global_position, false)
+	return not test_move(transform, p - global_position, false)
 
 var _ignore = []
 
@@ -336,6 +406,7 @@ func shoot():
 const OFFSET_SIZE = 20
 
 func hide_at(p):
+	_is_hiding = true
 	self._owned_hide_point = p
 	_target_pos = p.to_global(OFFSET_SIZE)
 	STATE = STATES.HIDE
