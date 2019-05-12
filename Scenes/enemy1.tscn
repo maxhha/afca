@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scenes/enemy_runner.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
@@ -8,7 +8,7 @@
 [ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=6]
 [ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=7]
 [ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=8]
-[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Sound/shoot2.wav" type="AudioStream" id=9]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
@@ -50,6 +50,9 @@ animations = [ {
 "speed": 9.0
 } ]
 
+[sub_resource type="AudioStreamRandomPitch" id=6]
+audio_stream = ExtResource( 9 )
+
 [sub_resource type="CircleShape2D" id=5]
 radius = 798.028
 
@@ -84,8 +87,11 @@ scale = Vector2( 0.3, 0.3 )
 frames = SubResource( 4 )
 animation = "stand_down"
 
-[node name="shoot1" parent="." instance=ExtResource( 9 )]
+[node name="shoot1" type="AudioStreamPlayer2D" parent="."]
 position = Vector2( -0.387421, 9.29811 )
+stream = SubResource( 6 )
+volume_db = -1.7
+bus = "Sound"
 
 [node name="ray_walls" type="RayCast2D" parent="."]
 position = Vector2( -0.387421, 9.29811 )

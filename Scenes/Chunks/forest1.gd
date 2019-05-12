@@ -3,7 +3,13 @@ extends "res://Scenes/Chunks/Chunk.gd"
 var TreeFG = preload("res://Scenes/tree.tscn")
 const tree_size = 75
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func create(connect_points, finish_points, props, TREE):
+	if has_node('kaps'):
+		$kaps.rotation = randf()*TAU
+		$box.rotation = randf()*TAU
+	
 	var TIME = OS.get_ticks_usec()
 	
 	prepeare_chunk(props.get("min_border_size", 1))
@@ -77,3 +83,13 @@ func create(connect_points, finish_points, props, TREE):
 		e += 1
 		
 	move_borders_to_shadow()
+
+func _ready():
+	if has_node('units'):
+		for u in $units.get_children():
+			var p = u.global_position
+			$units.remove_child(u)
+			
+			global.main.add_child(u)
+			u.global_position = p
+		$units.queue_free()

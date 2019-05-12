@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="tactic-scroll"
+config/name="AFCA"
 run/main_scene="res://Scenes/main.tscn"
 config/icon="res://icon.png"
 

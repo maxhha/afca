@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
@@ -22,6 +22,13 @@ bg_color = Color( 0.6, 0.564706, 0.141176, 1 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 32
+font_data = ExtResource( 10 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 1024, 10 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 64
 font_data = ExtResource( 10 )
 
 [node name="main" type="Node2D"]
@@ -52,7 +59,6 @@ fill = false
 always_show = true
 
 [node name="units" type="Node2D" parent="."]
-editor/display_folded = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 4 )]
@@ -62,13 +68,13 @@ position = Vector2( 672.012, 342.152 )
 position = Vector2( 257.276, 420.758 )
 
 [node name="unit3" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 663.5, 585.119 )
+position = Vector2( 687.5, 450.119 )
 
 [node name="unit4" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 357.856, 565.775 )
+position = Vector2( 357.856, 368.775 )
 
 [node name="unit5" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 554.687, 578.607 )
+position = Vector2( 663.687, 210.607 )
 
 [node name="unit6" parent="units" instance=ExtResource( 4 )]
 position = Vector2( 315.524, 276.269 )
@@ -80,7 +86,7 @@ position = Vector2( 505.544, 172.188 )
 position = Vector2( 224.79, 294.211 )
 
 [node name="unit9" parent="units" instance=ExtResource( 5 )]
-position = Vector2( 709.453, 153.035 )
+position = Vector2( 702.453, 174.035 )
 
 [node name="cursor" type="Node2D" parent="."]
 editor/display_folded = true
@@ -223,3 +229,21 @@ custom_fonts/font = SubResource( 2 )
 text = "/\\
  | progress
 "
+
+[node name="wall" type="StaticBody2D" parent="."]
+position = Vector2( -32.8088, 555.699 )
+z_index = 1024
+collision_layer = 32
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="wall"]
+position = Vector2( 526.991, -8.20221 )
+shape = SubResource( 5 )
+
+[node name="Label" type="Label" parent="wall"]
+margin_left = 140.647
+margin_top = 290.085
+margin_right = 930.647
+margin_bottom = 366.085
+custom_fonts/font = SubResource( 6 )
+text = "Отступают только трусы!"

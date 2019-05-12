@@ -1,15 +1,20 @@
 extends Node2D
-
+ 
 var _chunk_path = ['chunk_start', 'forest_road', #'forest1', 
-	'gen1', 'gen1', 'gen1', 
-	'gen2', 'gen2', 'gen2', 'forest1', 'forest2','forest1', 'gen1', 'gen1']
+	'gen1', 'gen2', 'gen2',"forest_road", "gen3", "repear1",
+	'gen2', 'gen3', 'gen3',"forest_road", "gen3", "gen4", "repear2",
+	'gen3', 'gen4', "forest_road", "gen4", "gen5", "repear2",
+	'gen4', 'gen3', "forest_road", "gen3", "gen5", "repear3",
+	"gen6", "gen6", "gen6", "gen7", "gen7", "gen7", "gen7"
+	]
 var _chunk_types = {}
 var _connect_points = null
 
 var _chunk_classes = {
 	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn"),
-	"forest1": preload("res://Scenes/Chunks/forest1.tscn"),
-	'forest2': preload("res://Scenes/Chunks/forest2.tscn"),
+	"repear1": preload("res://Scenes/Chunks/repear1.tscn"),
+	"repear2": preload("res://Scenes/Chunks/repear2.tscn"),
+	"repear3": preload("res://Scenes/Chunks/repear3.tscn"),
 	"chunk_start": preload("res://Scenes/Chunks/chunk_start.tscn")
 }
 
@@ -46,6 +51,7 @@ func _ready():
 	
 	global.main = self
 	global.player = $player
+# warning-ignore:return_value_discarded
 	$player.connect('dead', self, '_on_player_death')
 	
 	randomize()
@@ -64,8 +70,8 @@ func _ready():
 	t["width"] = t["size"].x / 6
 	t["rand_delta"] = 50
 	
-	t["min_items"] = 0
-	t["max_items"] = 4
+	t["min_items"] = 2
+	t["max_items"] = 5
 	t["items_probs"] = {'grass':1}
 	
 	_chunk_types["forest_road"] = t
@@ -78,26 +84,48 @@ func _ready():
 	_chunk_types["gen1"] = t
 	
 	t = _chunk_types["gen1"].duplicate()
-	t["min_items"] = 3
+	t["min_items"] = 2
 	t["max_items"] = 7
 	t["items_probs"] = {'trunk':2, 'bush':3, 'enemy_runner': 3, 'grass':1}
 	
 	_chunk_types["gen2"] = t
 	
-#	t = {'class':'forest1'}
-#	t["min_border_size"] = border_size
-#
-#	_chunk_types["forest1"] = t
-#
-#	t = {'class':'forest2'}
-#	t["min_border_size"] = border_size
-#
-#	_chunk_types["forest2"] = t
-#
-#	t = {'class':'chunk_start'}
-#	t["min_border_size"] = border_size
-#
-#	_chunk_types["chunk_start"] = t
+	
+	t = _chunk_types["gen1"].duplicate()
+	t["min_items"] = 3
+	t["max_items"] = 8
+	t["items_probs"] = {'trunk':2, 'wall':1, 'enemy_runner': 5, 'grass':1, 'bush':2 }
+	
+	_chunk_types["gen3"] = t
+	
+	t = _chunk_types["gen1"].duplicate()
+	t["min_items"] = 4
+	t["max_items"] = 8
+	t["items_probs"] = {'trunk':2, 'wall':2, 'enemy_runner': 5, 'enemy_gunner': 2, 'grass':1, 'bush':1}
+	
+	_chunk_types["gen4"] = t
+	
+	t = _chunk_types["gen1"].duplicate()
+	t["size"] = _chunk_types["gen1"]['size']*Vector2(1, 1.3)
+	t["min_items"] = 5
+	t["max_items"] = 9
+	t["items_probs"] = {'trunk':2, 'wall':4, 'enemy_runner': 6, 'enemy_gunner': 3, 'enemy_rocket': 1, 'grass':1}
+	
+	_chunk_types["gen5"] = t
+	
+	t = _chunk_types["gen5"].duplicate()
+	t["min_items"] = 6
+	t["max_items"] = 9
+	t["items_probs"] = {'trunk':1, 'wall':4, 'enemy_runner': 3, 'enemy_gunner': 3, 'enemy_rocket': 2}
+	
+	_chunk_types["gen6"] = t
+	
+	t = _chunk_types["gen6"].duplicate()
+	t["min_items"] = 10
+	t["max_items"] = 18
+	t["items_probs"] = {'wall':4, 'enemy_runner': 3, 'enemy_gunner': 3, 'enemy_rocket': 2}
+	
+	_chunk_types["gen7"] = t
 	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
@@ -178,6 +206,7 @@ func _process(delta):
 		gameover_timer = max(gameover_timer - delta, 0)
 		$UI/white_screen.color.a = 1 - gameover_timer / GAMEOVER_TIME
 		if gameover_timer == 0:
+# warning-ignore:return_value_discarded
 			get_tree().reload_current_scene()
 	
 	if $UI/control.visible and Input.is_action_just_pressed('up'):
@@ -189,62 +218,6 @@ func _process(delta):
 	if Input.is_action_just_pressed('music'):
 		var i = AudioServer.get_bus_index('Music')
 		AudioServer.set_bus_mute(i, not AudioServer.is_bus_mute(i))
-
-# warning-ignore:unused_argument
-#func unit_control_process(delta):
-#	pointer.global_position = current_unit.global_position
-#	pointer_circle.radius = current_unit.RUN_DISTANCE
-#	var cpos = get_global_mouse_position()
-#
-#	var obj = $cursor/damage_area.get_overlapping_bodies()
-#	obj = null if obj.size() == 0 else obj[0]
-#
-#	if obj != null and current_unit.can_target(obj):
-#
-#		$sticky_cursor.global_position = obj.global_position
-#		$sticky_cursor.modulate.a = 1;
-#		self.cursor_type = CURSOR_TYPE.TARGET
-#
-#		if Input.is_action_just_pressed("click"):
-#			current_unit.attack_to(obj)
-#			next_unit()
-#
-#	elif current_unit.can_move():
-#
-#		var h = get_hiding_point(cpos, current_unit.OFFSET_SIZE)
-#
-#		if h:
-#			cpos = h.to_global(current_unit.OFFSET_SIZE)
-#
-#			if h.owned_by != null or not no_wall_on_path(current_unit.global_position, cpos):
-#				self.cursor_type = CURSOR_TYPE.DENIED
-#			else:
-#				$sticky_cursor.global_position = cpos
-#				var x = h.parent.get_parent().block_propability
-#				$sticky_cursor.modulate.a = 2*x - x*x
-#				self.cursor_type = CURSOR_TYPE.HIDE
-#
-#				if Input.is_action_just_pressed("click"):
-#					current_unit.hide_at(h)
-#					next_unit()
-#
-#		elif current_unit.is_free_move_to(cpos) and no_wall_on_path(current_unit.global_position, cpos):
-#			self.cursor_type = CURSOR_TYPE.NORMAL
-#			if Input.is_action_just_pressed("click"):
-#				current_unit.move_to(cpos)
-#				next_unit()
-#		else:
-#			self.cursor_type = CURSOR_TYPE.DENIED
-#
-#		current_unit.look(cpos)
-#		pointer_circle.show()
-#	else:
-#		pointer_circle.hide()
-#
-#	cursor.global_position = get_global_mouse_position()
-#
-#func current_unit_can_move_to_cursor():
-#	return current_unit.is_free_move_to(cursor.global_position) and no_wall_on_path(current_unit.global_position, cursor.global_position)
 
 func get_hiding_point(pos, offset):
 	var hide_areas = cursor.get_node('hide_area').get_overlapping_areas()
@@ -284,8 +257,9 @@ func chunks_generator_update():
 			chunks[nn % CHUNKS_BUFFER_SIZE] = c
 			c.position.y = chunks[next_i % CHUNKS_BUFFER_SIZE].position.y-c.size.y
 			$chunks.add_child(c)
-			
-			
+		
+		if chunks_offset_i > 0:
+			$wall.global_position.y = chunks[chunks_offset_i % CHUNKS_BUFFER_SIZE].global_position.y
 		current_chunk_i = next_i
 		current_chunk = chunks[current_chunk_i % CHUNKS_BUFFER_SIZE]
 

@@ -1,0 +1,97 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/NovyKholst15.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/gear_box.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Chunks/trunk.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Sprites/trunk.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/glow.png" type="Texture" id=7]
+
+[node name="walls" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="left" type="CollisionPolygon2D" parent="."]
+z_index = 1536
+polygon = PoolVector2Array( 0, 0, 0, 900, 200, 900, 200, 0 )
+
+[node name="right" type="CollisionPolygon2D" parent="."]
+position = Vector2( 90.737, 0 )
+z_index = 1536
+polygon = PoolVector2Array( 1024, 0, 1024, 900, 870, 900, 870, 0 )
+
+[node name="kaps" type="Sprite" parent="."]
+position = Vector2( 267.243, 417.755 )
+scale = Vector2( 0.9, 0.9 )
+texture = ExtResource( 2 )
+
+[node name="box" parent="." instance=ExtResource( 3 )]
+position = Vector2( 356.852, 538.914 )
+
+[node name="units" type="Node2D" parent="."]
+editor/display_folded = true
+position = Vector2( -21.097, 170.535 )
+
+[node name="unit" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 272.784, 542.3 )
+rotation = 1.01172
+
+[node name="unit2" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 467.297, 381.845 )
+rotation = 0.172183
+
+[node name="unit3" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 444.972, 503.16 )
+rotation = 0.616961
+scale = Vector2( 1, 1 )
+
+[node name="unit4" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 458.272, 268.13 )
+rotation = 0.0866151
+
+[node name="unit5" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 416.757, 167.952 )
+rotation = -0.947017
+
+[node name="unit6" parent="units" instance=ExtResource( 4 )]
+position = Vector2( 388.779, 265.422 )
+rotation = -0.765471
+
+[node name="trunk" parent="." instance=ExtResource( 5 )]
+
+[node name="trunk2" type="Sprite" parent="."]
+editor/display_folded = true
+position = Vector2( 391.604, 240.5 )
+rotation = 0.373783
+scale = Vector2( 0.9, 0.9 )
+texture = ExtResource( 6 )
+
+[node name="glow" type="Sprite" parent="trunk2"]
+modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( -1, 13 )
+rotation = -0.129154
+scale = Vector2( 1.033, 0.3 )
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="trunk3" type="Sprite" parent="."]
+editor/display_folded = true
+position = Vector2( 564.224, 476.104 )
+rotation = 1.90661
+scale = Vector2( 0.9, 0.9 )
+texture = ExtResource( 6 )
+
+[node name="glow" type="Sprite" parent="trunk3"]
+modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( -1, 13 )
+rotation = -0.129154
+scale = Vector2( 1.033, 0.3 )
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_lock_": true
+}

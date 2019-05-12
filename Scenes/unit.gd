@@ -40,7 +40,8 @@ func set_health(h):
 	health = h
 	if h <= 0:
 		self._owned_hide_point = null
-		_owned_ship_point.own()
+		if _owned_ship_point:
+			_owned_ship_point.own()
 		STATE = STATES.DEATH
 		emit_signal("dead")
 		queue_free()
@@ -53,7 +54,6 @@ var _targeting = false
 var _is_hiding = false
 
 var timer = 0
-var _slide_vel_accum = Vector2()
 
 func _ready():
 	health = MAX_HEALTH

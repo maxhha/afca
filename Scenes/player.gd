@@ -11,7 +11,7 @@ const ATTACK_TIMEOUT = 1.0/5
 const BODY_ROTATE_SPEED = PI/4
 const ROTATE_SPEED = PI / 0.3
 
-const MAX_HEALTH = 20
+const MAX_HEALTH = 16
 
 enum STATES {MOVE}
 var STATE = STATES.MOVE
@@ -92,6 +92,9 @@ func _process(delta):
 				continue
 			var u = p.owned_by
 			p.owned_by = null
+			
+			if not is_instance_valid(u):
+				continue
 			
 			for j in units_points:
 				if j.owned_by == null:

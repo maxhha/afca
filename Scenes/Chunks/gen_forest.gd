@@ -1,6 +1,5 @@
 extends "res://Scenes/Chunks/Chunk.gd"
 
-var Trunk = preload("res://Scenes/Obstacles/trunk.tscn")
 var TreeFG = preload("res://Scenes/tree.tscn")
 const trunk_size = 160
 const tree_size = 75

@@ -292,6 +292,7 @@ func place_items(count, probs, TREE):
 	var right = $right.polygon
 	prepear_probs(probs)
 	
+# warning-ignore:unused_variable
 	for i in range(count):
 		var p_y 
 		var p_x 

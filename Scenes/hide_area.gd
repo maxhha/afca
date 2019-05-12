@@ -80,14 +80,14 @@ func get_nearest_free_point_to(pos, side_pos = null):
 func get_hiding_objects():
 	var list = []
 	for p in points:
-		if p.owned_by and p.owned_by.is_hiding():
+		if is_instance_valid(p.owned_by) and p.owned_by.is_in_group('unit') and p.owned_by.is_hiding():
 			list.append(p.owned_by)
 	return list
 
 func is_owned_by_enemy():
 
 	for em in points:
-		if em.owned_by and em.owned_by.is_in_group('enemy'):
+		if is_instance_valid(em.owned_by) and em.owned_by.is_in_group('enemy'):
 			return true
 			
 	return false

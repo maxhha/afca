@@ -20,6 +20,7 @@ class Item:
 		self.r = r
 		self.scene = scene
 
+# warning-ignore:unused_class_variable
 var Items = {
 	'grass': Item.new(15, preload("res://Scenes/grass.tscn")),
 	'trunk': Item.new(160, preload("res://Scenes/Obstacles/trunk.tscn")),
