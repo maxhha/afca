@@ -29,6 +29,9 @@ var health = 3 setget set_health
 var _damaged_timer = 0
 var timer = 0
 
+func _ready():
+	$sprite.material = $sprite.material.duplicate()
+
 func set_health(h):
 	health = h
 	_damaged_timer = DAMAGED_EFF_T
@@ -270,7 +273,7 @@ func move_to(e):
 func _process(delta):
 	_damaged_timer = max(_damaged_timer - delta, 0)
 	var k = ease(_damaged_timer / DAMAGED_EFF_T, 0.5)
-	#$sprite_white.modulate.a = k
+	$sprite.get_material().set_shader_param('k', k)
 
 func _draw():
 	if global.SHOW_HINTS:
@@ -283,6 +286,7 @@ func get_damage(dmg):
 		self._owned_hide_point = null
 	elif STATE != STATES.DEATH and _owned_hide_point:
 		hide_at(_owned_hide_point)
+	_damaged_timer = DAMAGED_EFF_T
 
 func is_hiding():
 	return STATE == STATES.HIDING

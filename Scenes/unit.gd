@@ -46,8 +46,9 @@ var _targeting = false
 
 var timer = 0
 
-#func _ready():
-#	rotation = PI / 4 * ( - 3 + randf() * 2)
+func _ready():
+	$sprite.material = $sprite.material.duplicate()
+	rotation = PI / 4 * ( - 3 + randf() * 2)
 
 func _physics_process(delta):
 	
@@ -159,6 +160,15 @@ func _physics_process(delta):
 			
 			get_parent().add_child(b)
 			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
+
+
+const DAMAGED_EFF_T = 0.2
+var _damaged_timer = 0
+
+func _process(delta):
+	_damaged_timer = max(_damaged_timer - delta, 0)
+	var k = ease(_damaged_timer / DAMAGED_EFF_T, 0.5)
+	$sprite.get_material().set_shader_param('k', k)
 
 func rotate_to(r, step):
 	r = deg2rad(rad2deg(r))
@@ -295,6 +305,7 @@ func get_damage(dmg):
 		self._owned_hide_point = null
 	elif STATE != STATES.DEATH and _owned_hide_point:
 		hide_at(_owned_hide_point)
+	_damaged_timer = DAMAGED_EFF_T
 
 func start_standup(target_rot=rotation, next=null):
 	STATE = STATES.STANDUP

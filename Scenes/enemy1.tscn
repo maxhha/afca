@@ -1,14 +1,15 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Scenes/enemy_runner.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/enemy_runner_run_0.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=7]
-[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=8]
-[ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
+[ext_resource path="res://Sprites/enemy_runner_run_0.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=8]
+[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 25.5
@@ -16,35 +17,40 @@ radius = 25.5
 [sub_resource type="CircleShape2D" id=2]
 radius = 32.6324
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 2 )
+shader_param/k = 0.0
+shader_param/color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="SpriteFrames" id=5]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 2 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 2 ), ExtResource( 4 ), ExtResource( 2 ), ExtResource( 2 ) ],
-"loop": true,
-"name": "hiding",
-"speed": 3.0
-}, {
-"frames": [ ExtResource( 2 ), ExtResource( 5 ), ExtResource( 2 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ) ],
 "loop": true,
 "name": "run",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 6 ), ExtResource( 7 ) ],
+"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
 "loop": false,
 "name": "stand_up",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 6 ), ExtResource( 5 ) ],
 "loop": false,
 "name": "stand_down",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 7 ) ],
+"frames": [ ExtResource( 6 ) ],
 "loop": true,
 "name": "stand",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 8 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "hiding",
+"speed": 3.0
 } ]
 
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="CircleShape2D" id=8]
 radius = 447.794
 
 [node name="enemy" type="KinematicBody2D" groups=[
@@ -67,13 +73,14 @@ position = Vector2( 0.811874, -9.16259 )
 shape = SubResource( 2 )
 
 [node name="sprite" type="AnimatedSprite" parent="."]
+material = SubResource( 4 )
 position = Vector2( 25.98, -13.3379 )
 rotation = 1.5708
 scale = Vector2( 0.3, 0.3 )
-frames = SubResource( 3 )
+frames = SubResource( 5 )
 animation = "stand_down"
 
-[node name="shoot1" parent="." instance=ExtResource( 8 )]
+[node name="shoot1" parent="." instance=ExtResource( 9 )]
 
 [node name="ray_walls" type="RayCast2D" parent="."]
 collision_mask = 17
@@ -86,11 +93,15 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
-shape = SubResource( 4 )
+shape = SubResource( 8 )
 
-[node name="view" parent="." instance=ExtResource( 9 )]
+[node name="view" parent="." instance=ExtResource( 10 )]
 radius = 448.0
+fill = false
+always_show = false
 
-[node name="attack" parent="." instance=ExtResource( 9 )]
+[node name="attack" parent="." instance=ExtResource( 10 )]
 modulate = Color( 1, 0, 0, 1 )
 radius = 300.0
+fill = false
+always_show = false

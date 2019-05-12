@@ -1,18 +1,14 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/player.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/btr_body.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/glow.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/btr_ligit.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/btr_gun.png" type="Texture" id=5]
-[ext_resource path="res://Sound/shoot3.wav" type="AudioStream" id=6]
 
 [sub_resource type="CapsuleShape2D" id=3]
 radius = 43.9097
 height = 38.8728
-
-[sub_resource type="AudioStreamRandomPitch" id=5]
-audio_stream = ExtResource( 6 )
 
 [sub_resource type="Animation" id=1]
 resource_name = "shoot"
@@ -29,20 +25,6 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( -16, 0 ), Vector2( 0, 0 ) ]
-}
-tracks/1/type = "audio"
-tracks/1/path = NodePath("anim/snd")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/keys = {
-"clips": [ {
-"end_offset": 0.03,
-"start_offset": 0.0,
-"stream": SubResource( 5 )
-} ],
-"times": PoolRealArray( 0 )
 }
 
 [sub_resource type="Animation" id=2]
@@ -66,17 +48,11 @@ data = PoolByteArray( 165, 246, 165, 246, 240, 7, 240, 7, 47, 10, 47, 10, 255, 2
 format = 1
 stereo = true
 
-[sub_resource type="AudioStreamRandomPitch" id=6]
-audio_stream = SubResource( 7 )
-random_pitch = 1.07
-
 [sub_resource type="AudioStreamRandomPitch" id=8]
 audio_stream = SubResource( 7 )
-random_pitch = 1.07
 
 [sub_resource type="AudioStreamRandomPitch" id=9]
 audio_stream = SubResource( 7 )
-random_pitch = 1.07
 
 [node name="player" type="KinematicBody2D"]
 scale = Vector2( 2.5, 2.5 )
@@ -118,12 +94,6 @@ offset = Vector2( 48, 0 )
 [node name="anim" type="AnimationPlayer" parent="sprite/gun/sprite"]
 anims/shoot = SubResource( 1 )
 anims/stand = SubResource( 2 )
-
-[node name="snd" type="AudioStreamPlayer2D" parent="sprite/gun/sprite/anim"]
-scale = Vector2( 0.75, 0.75 )
-stream = SubResource( 6 )
-volume_db = -2.167
-bus = "Sound"
 
 [node name="shoot_points" type="Node2D" parent="sprite/gun"]
 
