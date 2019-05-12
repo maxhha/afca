@@ -4,3 +4,4 @@ var SHOW_HINTS = false
 
 # warning-ignore:unused_class_variable
 var player_units = []
+var player = null

@@ -7,7 +7,7 @@
 radius = 0.0732773
 
 [node name="bullet" type="KinematicBody2D"]
-z_index = 523
+z_index = 128
 collision_layer = 0
 collision_mask = 17
 script = ExtResource( 1 )

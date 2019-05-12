@@ -1,15 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/unit.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Scenes/camera_control.gd" type="Script" id=5]
-[ext_resource path="res://Sprites/solder.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/trunk.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/barrel_top.png" type="Texture" id=8]
-[ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=9]
-[ext_resource path="res://Sprites/cursor/safe.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/camera_control.gd" type="Script" id=4]
+[ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=5]
+[ext_resource path="res://Sprites/cursor/safe.png" type="Texture" id=6]
+[ext_resource path="res://Scenes/player.tscn" type="PackedScene" id=7]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 99.0
@@ -20,6 +17,8 @@ script = ExtResource( 1 )
 [node name="bg" type="Node2D" parent="."]
 
 [node name="pointer" type="Position2D" parent="."]
+editor/display_folded = true
+visible = false
 position = Vector2( 621.854, 358.362 )
 z_index = 64
 
@@ -41,19 +40,9 @@ always_show = true
 [node name="units" type="Node2D" parent="."]
 z_index = 16
 
-[node name="unit" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 509.27, 316.582 )
-rotation = -1.57079
-
-[node name="unit2" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 441.679, 329.722 )
-rotation = -2.35619
-
-[node name="unit3" parent="units" instance=ExtResource( 4 )]
-position = Vector2( 575.694, 329.337 )
-rotation = -0.785397
-
 [node name="cursor" type="Node2D" parent="."]
+editor/display_folded = true
+visible = false
 position = Vector2( 987.101, 95.7635 )
 scale = Vector2( 0.2, 0.2 )
 z_index = 1025
@@ -75,9 +64,8 @@ collision_mask = 8
 shape = SubResource( 1 )
 
 [node name="camera_control" type="Node2D" parent="."]
-editor/display_folded = true
 position = Vector2( 515.12, 298.875 )
-script = ExtResource( 5 )
+script = ExtResource( 4 )
 
 [node name="camera" type="Camera2D" parent="camera_control"]
 current = true
@@ -90,22 +78,6 @@ drag_margin_bottom = 0.0
 exclude_parent = false
 
 [node name="chunks" type="Node2D" parent="."]
-
-[node name="Sprite2" type="Sprite" parent="."]
-position = Vector2( 306.148, 410.691 )
-
-[node name="solder" type="Sprite" parent="."]
-position = Vector2( -727.95, 317.456 )
-scale = Vector2( 0.333, 0.333 )
-texture = ExtResource( 6 )
-
-[node name="trunk2" type="Sprite" parent="."]
-position = Vector2( -665.931, 204.856 )
-texture = ExtResource( 7 )
-
-[node name="barrel_top" type="Sprite" parent="."]
-position = Vector2( -600, 320 )
-texture = ExtResource( 8 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -120,13 +92,17 @@ margin_bottom = -0.418152
 color = Color( 1, 1, 1, 0 )
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 9 )
+stream = ExtResource( 5 )
 autoplay = true
 mix_target = 1
 bus = "Music"
 
 [node name="sticky_cursor" type="Sprite" parent="."]
+visible = false
 position = Vector2( 987.101, 95.7635 )
 z_index = 1025
-texture = ExtResource( 10 )
+texture = ExtResource( 6 )
 hframes = 2
+
+[node name="player" parent="." instance=ExtResource( 7 )]
+position = Vector2( 545.527, 422.934 )

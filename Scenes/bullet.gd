@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 const OBSTACLE_BIT = 16
-const SPEED = 1500
+const SPEED = 1800
 
 var damage = 1
 var linear_vel = Vector2()
@@ -30,6 +30,7 @@ func _physics_process(delta):
 					add_collision_exception_with(o)
 				add_collision_exception_with(k.collider)
 				continue
+			add_collision_exception_with(k.collider)
 			queue_free()
 			break
 		else:

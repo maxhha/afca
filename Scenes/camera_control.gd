@@ -8,12 +8,10 @@ func _ready():
 
 # warning-ignore:unused_argument
 func _process(delta):
-	if global.player_units.size() > 0:
-		var target = Vector2()
+	if global.player:
 		
-		for u in global.player_units:
-			target += u.global_position
-		var p = (target / global.player_units.size()*2 + get_global_mouse_position()) / 3
+		var target = global.player.global_position
+		var p = (target + get_global_mouse_position()) / 2
 		var y = p.y
 		var t = Vector2(p.x,p.y)
 #		if direction >= 0:
