@@ -1,0 +1,81 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Scenes/Obstacles/Obstacle.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/wall.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/glow.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/hide_area.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/position.png" type="Texture" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 60.5844, 15.2079 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 73.5216, 26.5096 )
+
+[node name="trunk" type="KinematicBody2D" groups=[
+"obstacle",
+]]
+collision_layer = 17
+collision_mask = 0
+script = ExtResource( 1 )
+block_propability = 0.75
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -5.5244, -18.9352 )
+rotation = -0.159523
+scale = Vector2( 0.6, 0.6 )
+z_index = 2
+texture = ExtResource( 2 )
+
+[node name="glow" type="Sprite" parent="Sprite"]
+modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 0.646642, 30.3733 )
+rotation = 0.00456838
+scale = Vector2( 1.1366, 0.449241 )
+texture = ExtResource( 3 )
+
+[node name="hide" type="Area2D" parent="."]
+position = Vector2( 0.800079, -11.8202 )
+monitoring = false
+collision_layer = 4
+collision_mask = 0
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hide"]
+position = Vector2( 5.05299, 47.9391 )
+rotation = -0.16303
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="hide"]
+position = Vector2( -12.4151, -27.593 )
+rotation = -0.16303
+shape = SubResource( 1 )
+
+[node name="unit_poses" type="Node2D" parent="hide"]
+
+[node name="position" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( 38.1088, 40.519 )
+rotation = 1.42278
+texture = ExtResource( 5 )
+
+[node name="position2" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -37.2372, 51.3558 )
+rotation = 1.40838
+texture = ExtResource( 5 )
+
+[node name="position4" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( 22.2143, -31.63 )
+rotation = -1.74974
+texture = ExtResource( 5 )
+
+[node name="position5" type="Sprite" parent="hide/unit_poses"]
+position = Vector2( -46.0929, -18.4401 )
+rotation = -1.7
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -3.45375, -2.73082 )
+rotation = -0.159518
+z_index = 100
+shape = SubResource( 2 )

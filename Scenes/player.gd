@@ -154,6 +154,9 @@ func set_health(s):
 	health = s
 	$ui/health.value = health
 	if s <= 0:
+		var b = preload("res://Scenes/rocket_destroy.tscn").instance()
+		get_parent().add_child(b)
+		b.global_position = global_position
 		emit_signal('dead')
 		queue_free()
 

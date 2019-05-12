@@ -23,7 +23,9 @@ class Item:
 var Items = {
 	'grass': Item.new(15, preload("res://Scenes/grass.tscn")),
 	'trunk': Item.new(160, preload("res://Scenes/Obstacles/trunk.tscn")),
+	'wall': Item.new(100, preload("res://Scenes/Obstacles/wall.tscn")),
 	'bush': Item.new(25, preload("res://Scenes/Obstacles/bush.tscn")),
 	'enemy_runner': Item.new(50, preload("res://Scenes/enemy1.tscn")),
-	'enemy_gunner': Item.new(50, preload("res://Scenes/enemy2.tscn"))
+	'enemy_gunner': Item.new(50, preload("res://Scenes/enemy2.tscn")),
+	'enemy_rocket': Item.new(50, preload("res://Scenes/enemy3.tscn"))
 }

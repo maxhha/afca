@@ -129,6 +129,7 @@ volume_db = -2.167
 bus = "Sound"
 
 [node name="units_poses" type="Node2D" parent="."]
+editor/display_folded = true
 
 [node name="p1" type="Position2D" parent="units_poses"]
 position = Vector2( 66.0481, -35.8648 )
@@ -193,13 +194,3 @@ custom_styles/fg = SubResource( 8 )
 custom_styles/bg = SubResource( 9 )
 value = 50.0
 percent_visible = false
-
-[node name="Label" type="Label" parent="ui/health"]
-anchor_top = 0.5
-anchor_bottom = 0.5
-margin_left = 32.0
-margin_top = -10.0
-margin_right = 74.0
-margin_bottom = 10.0
-text = "Health"
-valign = 1

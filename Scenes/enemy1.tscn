@@ -97,6 +97,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
+visible = false
 shape = SubResource( 5 )
 
 [node name="view" parent="." instance=ExtResource( 10 )]

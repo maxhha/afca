@@ -32,5 +32,5 @@ func _process(delta):
 #		else:
 #			t.y = min(y, global_position.y)
 		
-		t.y = min(t.y, 256)
+		t.y = min(t.y, 0)
 		global_position = global_position.linear_interpolate(t, 0.2)

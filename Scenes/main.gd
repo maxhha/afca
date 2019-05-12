@@ -39,6 +39,8 @@ var bg_grad_offset_i = 0
 const BORDER_SIZE = 512
 
 func _ready():
+	$UI/progress.value = 0
+	$UI/progress.max_value = _chunk_path.size() - 2
 	Input.set_custom_mouse_cursor(preload("res://Sprites/cursor/target.png"), Input.CURSOR_ARROW, Vector2(32,32))
 	$UI/white_screen.show()
 	
@@ -177,6 +179,16 @@ func _process(delta):
 		$UI/white_screen.color.a = 1 - gameover_timer / GAMEOVER_TIME
 		if gameover_timer == 0:
 			get_tree().reload_current_scene()
+	
+	if $UI/control.visible and Input.is_action_just_pressed('up'):
+		$UI/control.hide()
+	
+	if Input.is_action_just_pressed('sound'):
+		var i = AudioServer.get_bus_index('Sound')
+		AudioServer.set_bus_mute(i, not AudioServer.is_bus_mute(i))
+	if Input.is_action_just_pressed('music'):
+		var i = AudioServer.get_bus_index('Music')
+		AudioServer.set_bus_mute(i, not AudioServer.is_bus_mute(i))
 
 # warning-ignore:unused_argument
 #func unit_control_process(delta):
@@ -300,6 +312,7 @@ func get_next_chunk():
 		var type = fallback_type
 		if _chunk_path.size() > 0:
 			type = _chunk_path.pop_front()
+			$UI/progress.value = max(0, $UI/progress.max_value - _chunk_path.size())
 		
 		_next_chunk = create_chunk(type)
 	
