@@ -193,12 +193,12 @@ func _physics_process(delta):
 			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
 
 const FOLLOW_DISTANCE = 100
-const FOLLOW_DISTANCE_HIDING = 800
+const FOLLOW_DISTANCE_HIDING_Y = 200
 
 func should_follow():
 	if _owned_ship_point and global.player:
 		var p = _owned_ship_point.to_global()
-		if (not _is_hiding and p.distance_to(global_position) > FOLLOW_DISTANCE) or global_position.y - global.player.global_position.y > 200:
+		if (not _is_hiding and p.distance_to(global_position) > FOLLOW_DISTANCE) or global_position.y - global.player.global_position.y > FOLLOW_DISTANCE_HIDING_Y:
 			move_to(p+global.player.linear_vel * FOLLOW_DISTANCE*2 / MOVE_SPEED)
 			
 			return true

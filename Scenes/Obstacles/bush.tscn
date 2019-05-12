@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Obstacles/bush.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/bushes.png" type="Texture" id=2]
-[ext_resource path="res://Scenes/hide_area.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/hide_area.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/bushes.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/glow.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 43.9839
@@ -16,18 +17,11 @@ script = ExtResource( 1 )
 block_propability = 0.3
 ignore = false
 
-[node name="sprite" type="Sprite" parent="."]
-scale = Vector2( 0.6, 0.6 )
-z_index = 16
-texture = ExtResource( 2 )
-offset = Vector2( -16, -16 )
-hframes = 3
-
 [node name="hide" type="Area2D" parent="."]
 monitoring = false
 collision_layer = 4
 collision_mask = 0
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 
 [node name="shape" type="CollisionShape2D" parent="hide"]
 shape = SubResource( 1 )
@@ -37,4 +31,19 @@ shape = SubResource( 1 )
 [node name="Position2D" type="Position2D" parent="hide/unit_poses"]
 
 [node name="shape" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource( 1 )
+
+[node name="sprite" type="Sprite" parent="."]
+scale = Vector2( 0.6, 0.6 )
+z_index = 16
+texture = ExtResource( 3 )
+offset = Vector2( -16, -16 )
+hframes = 3
+
+[node name="glow" type="Sprite" parent="sprite"]
+modulate = Color( 0, 0, 0, 1 )
+position = Vector2( -0.000661214, -1.31774 )
+scale = Vector2( 0.65, 0.65 )
+z_as_relative = false
+texture = ExtResource( 4 )

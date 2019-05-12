@@ -37,8 +37,6 @@ class UnitPoint:
 	
 	func own(o=null):
 		owned_by = o 
-		if o != null:
-			o.connect('dead', self, 'own', [null])
 
 var units_points = []
 
@@ -88,6 +86,14 @@ func _process(delta):
 			if p.owned_by == null:
 				continue
 			var u = p.owned_by
+			p.owned_by = null
+			
+			for j in units_points:
+				if j.owned_by == null:
+					u._owned_ship_point = j
+					j.own(u)
+					break
+			
 			if u._owned_hide_point:
 				continue
 			for a in $hide_area.get_overlapping_areas():
@@ -98,6 +104,7 @@ func _process(delta):
 					var h = a.get_nearest_free_point_to(u.global_position, global_position)
 					if h:
 						u.hide_at(h)
+		
 		
 func rotate_to(rot, r, step):
 	r = deg2rad(rad2deg(r))

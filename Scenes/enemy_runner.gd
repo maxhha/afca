@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const SHOOT_RAND = PI/12
 const ATTACK_DISTANCE = 450
-const MOVE_SPEED = 400
+export (float) var MOVE_SPEED = 400
 const HIDE_TIME = 0.2
 const HIDING_TIME_MIN = 1
 const HIDING_TIME_MAX = 1.5
@@ -10,7 +10,7 @@ const STAND_TIME = 2
 const STANDUP_TIMER = 0.3
 const ROTATE_SPEED = PI / 0.3
 
-const ATTACK_TIMEOUT = 0.5
+export (float) var ATTACK_TIMEOUT = 0.5
 
 const DAMAGED_EFF_T = 0.2
 
@@ -24,13 +24,14 @@ var _target
 var _target_pos
 var _target_rot
 
-
+export (int) var MAX_HEALTH = 3
 var health = 3 setget set_health
 
 var _damaged_timer = 0
 var timer = 0
 
 func _ready():
+	health = MAX_HEALTH
 	$sprite.material = $sprite.material.duplicate()
 
 func set_health(h):
@@ -107,6 +108,9 @@ func _physics_process(delta):
 				rotate_to(_owned_hide_point.get_rotation(), ROTATE_SPEED*delta)
 				
 		STATES.ATTACK:
+			var e = get_nearest_enemy()
+			if e:
+				rotate_to((e.global_position - global_position).angle(), ROTATE_SPEED*delta)
 			timer = max(0, timer - delta)
 			if timer == 0:
 				STATE = STATES.STAND
@@ -141,7 +145,7 @@ func _physics_process(delta):
 				b.add_collision_exception_with(i)
 			
 			get_parent().add_child(b)
-			b.global_position = global_position + Vector2(1,0).rotated(rotation)*80
+			b.global_position = $shoot_point.global_position
 
 func start_standup(target_rot=rotation):
 	STATE = STATES.STANDUP

@@ -1,10 +1,12 @@
 extends KinematicBody2D
 
+const MAX_DIST = 2048
 const OBSTACLE_BIT = 16
-const SPEED = 1800
+const SPEED = 1800*2
 
 var damage = 1
 var linear_vel = Vector2()
+var dist = 0
 
 func init(dir, by_player=false):
 	if by_player:
@@ -15,8 +17,11 @@ func init(dir, by_player=false):
 	linear_vel = SPEED * dir.normalized()
 	return self
 
+var Destroy = preload("res://Scenes/bullet_destroy.tscn")
+
 func _physics_process(delta):
 	var distance = linear_vel * delta
+	dist += distance.length()
 	while distance.length() > 0:
 		var k = move_and_collide(distance)
 		if k:
@@ -31,10 +36,14 @@ func _physics_process(delta):
 				add_collision_exception_with(k.collider)
 				continue
 			add_collision_exception_with(k.collider)
+			var d = Destroy.instance()
+			get_parent().add_child(d)
+			d.global_position = global_position
+			d.z_index = z_index
 			queue_free()
 			break
 		else:
 			break
-			
-		
-	global_position += linear_vel * delta
+	
+	if  dist > MAX_DIST:
+		queue_free()

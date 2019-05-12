@@ -5,9 +5,9 @@
 [ext_resource path="res://Sprites/enemy_runner_run_0.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/enemy_runner_run_1.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/enemy_runner_run_2.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/enemy_runner_hide_0.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_runner_hide_1.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_runner.png" type="Texture" id=8]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=10]
 
@@ -29,24 +29,24 @@ animations = [ {
 "name": "run",
 "speed": 9.0
 }, {
-"frames": [ ExtResource( 6 ) ],
-"loop": true,
-"name": "stand",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 8 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "hiding",
 "speed": 3.0
 }, {
-"frames": [ ExtResource( 5 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 5 ), ExtResource( 8 ) ],
 "loop": false,
 "name": "stand_up",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 6 ), ExtResource( 5 ) ],
+"frames": [ ExtResource( 8 ), ExtResource( 5 ) ],
 "loop": false,
 "name": "stand_down",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ) ],
+"loop": true,
+"name": "stand",
 "speed": 5.0
 } ]
 
@@ -54,17 +54,19 @@ animations = [ {
 radius = 603.488
 
 [node name="enemy" type="KinematicBody2D" groups=[
-"unit",
 "enemy",
+"unit",
 ]]
 collision_layer = 8
 script = ExtResource( 1 )
+MOVE_SPEED = 500.0
 
 [node name="shape" type="CollisionShape2D" parent="."]
-position = Vector2( 0.811874, -9.16259 )
+position = Vector2( 0.424454, 0.135521 )
 shape = SubResource( 1 )
 
 [node name="hide_area" type="Area2D" parent="."]
+position = Vector2( -0.387421, 9.29811 )
 monitorable = false
 collision_layer = 0
 collision_mask = 4
@@ -75,18 +77,21 @@ shape = SubResource( 2 )
 
 [node name="sprite" type="AnimatedSprite" parent="."]
 material = SubResource( 3 )
-position = Vector2( 25.98, -13.3379 )
+position = Vector2( 25.5926, -4.03979 )
 rotation = 1.5708
 scale = Vector2( 0.3, 0.3 )
 frames = SubResource( 4 )
 animation = "stand_down"
 
 [node name="shoot1" parent="." instance=ExtResource( 9 )]
+position = Vector2( -0.387421, 9.29811 )
 
 [node name="ray_walls" type="RayCast2D" parent="."]
+position = Vector2( -0.387421, 9.29811 )
 collision_mask = 17
 
 [node name="view_area" type="Area2D" parent="."]
+visible = false
 monitorable = false
 collision_layer = 0
 collision_mask = 2
@@ -95,12 +100,17 @@ collision_mask = 2
 shape = SubResource( 5 )
 
 [node name="view" parent="." instance=ExtResource( 10 )]
+position = Vector2( -0.387421, 9.29811 )
 radius = 448.0
 fill = false
 always_show = false
 
 [node name="attack" parent="." instance=ExtResource( 10 )]
 modulate = Color( 1, 0, 0, 1 )
+position = Vector2( -0.387421, 9.29811 )
 radius = 300.0
 fill = false
 always_show = false
+
+[node name="shoot_point" type="Position2D" parent="."]
+position = Vector2( 76.8382, 9.46671 )

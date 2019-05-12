@@ -1,0 +1,127 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://Scenes/enemy2.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
+[ext_resource path="res://Sprites/enemy_hard/en1.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/enemy_hard/en3.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/enemy_hard/en5.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/enemy_hard/en6.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_hard/en2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_hard/en4.png" type="Texture" id=8]
+[ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Sound/shoot3.wav" type="AudioStream" id=10]
+[ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=11]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 25.5
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 32.6324
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 2 )
+shader_param/k = 0.0
+shader_param/color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "hiding",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 6 ) ],
+"loop": false,
+"name": "stand_up",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 3 ) ],
+"loop": false,
+"name": "stand_down",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "stand",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "run",
+"speed": 9.0
+} ]
+
+[sub_resource type="AudioStreamRandomPitch" id=6]
+audio_stream = ExtResource( 10 )
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 603.488
+
+[node name="enemy" type="KinematicBody2D" groups=[
+"enemy",
+"unit",
+]]
+collision_layer = 8
+script = ExtResource( 1 )
+MOVE_SPEED = 250.0
+ATTACK_TIMEOUT = 0.2
+MAX_HEALTH = 6
+
+[node name="shape" type="CollisionShape2D" parent="."]
+position = Vector2( -0.0622559, -0.0717049 )
+shape = SubResource( 2 )
+
+[node name="hide_area" type="Area2D" parent="."]
+editor/display_folded = true
+position = Vector2( -0.87413, 9.09089 )
+monitorable = false
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hide_area"]
+position = Vector2( 0.811874, -9.16259 )
+shape = SubResource( 3 )
+
+[node name="sprite" type="AnimatedSprite" parent="."]
+material = SubResource( 4 )
+position = Vector2( 25.1059, -4.24701 )
+rotation = 1.5708
+scale = Vector2( 0.3, 0.3 )
+frames = SubResource( 5 )
+animation = "stand_up"
+frame = 1
+playing = true
+
+[node name="shoot1" parent="." instance=ExtResource( 9 )]
+position = Vector2( -0.87413, 9.09089 )
+stream = SubResource( 6 )
+
+[node name="ray_walls" type="RayCast2D" parent="."]
+position = Vector2( -0.87413, 9.09089 )
+collision_mask = 17
+
+[node name="view_area" type="Area2D" parent="."]
+editor/display_folded = true
+visible = false
+monitorable = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
+shape = SubResource( 7 )
+
+[node name="view" parent="." instance=ExtResource( 11 )]
+position = Vector2( -0.87413, 9.09089 )
+radius = 603.0
+fill = false
+always_show = false
+
+[node name="attack" parent="." instance=ExtResource( 11 )]
+modulate = Color( 1, 0, 0, 1 )
+position = Vector2( -0.87413, 9.09089 )
+radius = 450.0
+fill = false
+always_show = false
+
+[node name="shoot_point" type="Position2D" parent="."]
+position = Vector2( 82.0453, 18.9335 )

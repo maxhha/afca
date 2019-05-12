@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Obstacles/trunk.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/enemy1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/enemy2.tscn" type="PackedScene" id=4]
 
 [node name="walls" type="StaticBody2D"]
 collision_mask = 0
@@ -38,7 +39,7 @@ position = Vector2( 448, 1055 )
 rotation = 0.0747828
 
 [node name="enemy" parent="." instance=ExtResource( 3 )]
-position = Vector2( 656, 1333 )
+position = Vector2( 628, 1075 )
 rotation = 1.80834
 
 [node name="enemy2" parent="." instance=ExtResource( 3 )]
@@ -68,3 +69,9 @@ rotation = 1.27902
 [node name="enemy8" parent="." instance=ExtResource( 3 )]
 position = Vector2( 588, 613 )
 rotation = 0.753761
+
+[node name="enemy9" parent="." instance=ExtResource( 4 )]
+position = Vector2( 409, 1180 )
+
+[node name="enemy10" parent="." instance=ExtResource( 4 )]
+position = Vector2( 807, 1127 )
