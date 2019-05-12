@@ -12,3 +12,17 @@ var main
 func camera_shake(pwr):
 	if main:
 		main.camera_shake(pwr)
+
+class Item:
+	var r 
+	var scene
+	func _init(r, scene):
+		self.r = r
+		self.scene = scene
+
+var Items = {
+	'trunk': Item.new(160, preload("res://Scenes/Obstacles/trunk.tscn")),
+	'bush': Item.new(25, preload("res://Scenes/Obstacles/bush.tscn")),
+	'enemy_runner': Item.new(50, preload("res://Scenes/enemy1.tscn")),
+	'enemy_gunner': Item.new(50, preload("res://Scenes/enemy2.tscn"))
+}

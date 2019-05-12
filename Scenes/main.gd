@@ -1,38 +1,22 @@
 extends Node2D
 
-var _chunk_path = ['forest_road', 'free_forest', 'forest1', 'forest2','forest1', 'forest2', 'free_forest', 'free_forest']
+var _chunk_path = ['chunk_start', 'forest_road', 
+	'gen1', 'gen1', 'gen1', 
+	'gen2', 'gen2', 'gen2', 'forest1', 'forest2','forest1', 'gen1', 'gen1']
 var _chunk_types = {}
 var _connect_points = null
 
 var _chunk_classes = {
 	"gen_forest": preload("res://Scenes/Chunks/gen_forest.tscn"),
 	"forest1": preload("res://Scenes/Chunks/forest1.tscn"),
-	'forest2': preload("res://Scenes/Chunks/forest2.tscn")
+	'forest2': preload("res://Scenes/Chunks/forest2.tscn"),
+	"chunk_start": preload("res://Scenes/Chunks/chunk_start.tscn")
 }
 
 #onready var player_units = $units.get_children()
 
 onready var cursor = $cursor
-#onready var pointer = $pointer
-#onready var pointer_circle = $pointer/circle
 
-#enum CURSOR_TYPE{NORMAL=2, DENIED=3, HIDE=1, TARGET=0}
-#var cursor_type = CURSOR_TYPE.NORMAL setget set_cursor_type
-#
-#var _cursor_normal = preload("res://Sprites/cursor/normal.png")
-#var _cursor_denied = preload("res://Sprites/cursor/denied.png")
-#var _cursor_center = _cursor_normal.get_size() / 2
-#
-#func set_cursor_type(t):
-#	cursor_type = t
-#	match t:
-#		CURSOR_TYPE.DENIED:
-#			Input.set_custom_mouse_cursor(_cursor_denied, Input.CURSOR_ARROW, _cursor_center)
-#		_:
-#			Input.set_custom_mouse_cursor(_cursor_normal, Input.CURSOR_ARROW)
-#
-#	$sticky_cursor.frame = t if t < $sticky_cursor.hframes else 0
-#	$sticky_cursor.visible = t == CURSOR_TYPE.HIDE or t == CURSOR_TYPE.TARGET
 
 signal game_over
 
@@ -52,6 +36,8 @@ var bg_grad_size = Vector2()
 var bg_grad_current = 0
 var bg_grad_offset_i = 0
 
+const BORDER_SIZE = 512
+
 func _ready():
 	Input.set_custom_mouse_cursor(preload("res://Sprites/cursor/target.png"), Input.CURSOR_ARROW, Vector2(32,32))
 	$UI/white_screen.show()
@@ -61,15 +47,10 @@ func _ready():
 	$player.connect('dead', self, '_on_player_death')
 	
 	randomize()
-#	current_unit = player_units[current]
-#	global.player_units = player_units
-	
-#	for p in player_units:
-#		p.connect("dead", self, "_on_player_unit_death", [p])
-	
+
 	#set up chunks
 	var normal_size = Vector2(1024, 600)
-	var border_size = 512
+	var border_size = BORDER_SIZE
 	$bg.position.x = -border_size
 	
 	
@@ -84,19 +65,33 @@ func _ready():
 	_chunk_types["forest_road"] = t
 	
 	t = _chunk_types["forest_road"].duplicate()
-	t["min_n_trunk"] = 0
-	t["max_n_trunk"] = 3
-	_chunk_types["free_forest"] = t
+	t["min_items"] = 0
+	t["max_items"] = 4
+	t["items_probs"] = {'trunk':2, 'bush':3}
 	
-	t = {'class':'forest1'}
-	t["min_border_size"] = border_size
+	_chunk_types["gen1"] = t
 	
-	_chunk_types["forest1"] = t
+	t = _chunk_types["gen1"].duplicate()
+	t["min_items"] = 2
+	t["max_items"] = 6
+	t["items_probs"] = {'trunk':2, 'bush':3, 'enemy_runner': 3}
 	
-	t = {'class':'forest2'}
-	t["min_border_size"] = border_size
+	_chunk_types["gen2"] = t
 	
-	_chunk_types["forest2"] = t
+#	t = {'class':'forest1'}
+#	t["min_border_size"] = border_size
+#
+#	_chunk_types["forest1"] = t
+#
+#	t = {'class':'forest2'}
+#	t["min_border_size"] = border_size
+#
+#	_chunk_types["forest2"] = t
+#
+#	t = {'class':'chunk_start'}
+#	t["min_border_size"] = border_size
+#
+#	_chunk_types["chunk_start"] = t
 	
 	_connect_points = [border_size, normal_size.x + border_size]
 	
@@ -314,8 +309,18 @@ func get_next_chunk():
 	return g
 	
 func create_chunk(type, finish_points=null):
-	var t = _chunk_types[type]
-	var g = _chunk_classes[t["class"]].instance()
+	var t
+	var c
+	if type in _chunk_types:
+		t = _chunk_types[type]
+		c = _chunk_classes[t["class"]]
+	elif type in _chunk_classes:
+		t = {"min_border_size": BORDER_SIZE}
+		c = _chunk_classes[type]
+	else:
+		assert(false)#Unknown type
+
+	var g = c.instance()
 		
 	g.create(_connect_points, finish_points, t, get_tree())
 	

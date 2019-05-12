@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
+
+[node name="walls" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="left" type="CollisionPolygon2D" parent="."]
+z_index = 1536
+polygon = PoolVector2Array( 0, 0, 0, 700, 200, 700, 200, 0 )
+
+[node name="right" type="CollisionPolygon2D" parent="."]
+position = Vector2( 350, 0 )
+z_index = 1536
+polygon = PoolVector2Array( 1024, 0, 1024, 700, 870, 700, 870, 0 )

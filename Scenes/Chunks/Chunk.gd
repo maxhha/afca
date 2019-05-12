@@ -4,6 +4,8 @@ const DARK_COLOR = Color("000F0F")
 const GRADIENT_SIZE = 256
 const GRADIENT_Z_INDEX = 1024
 
+const WORK_TIME = 5000# usec
+
 var size
 var finish_points 
 var start_points 
@@ -268,5 +270,86 @@ func connect_chunk(connect_points, border_size):
 		connect_points = this_points
 	
 	assert(this_points[1] - this_points[0]  == connect_points[1] - connect_points[0])
+
+class Pos:
+	var p
+	var r
+	func _init(pos, radius):
+		p = pos
+		r = radius
+
+signal end_gen
+
+func place_items(count, probs, TREE):
 	
+	if probs == null:
+		yield(TREE, "idle_frame")
+		return emit_signal('end_gen')
 	
+	var TIME = OS.get_ticks_usec()
+	var items = []
+	var left = $left.polygon
+	var right = $right.polygon
+	prepear_probs(probs)
+	
+	for i in range(count):
+		var p_y 
+		var p_x 
+		var type 
+		
+		var e = 0
+		
+		var matches = false
+		
+		while not matches and e < 1000:
+			type = global.Items[get_rand(probs)]
+			
+			p_y = (randi() % int(count_points*2 - 3) + 1) / 2.0
+			var min_x = _soft_get(left, p_y+2).x + type.r
+			var max_x = _soft_get(right, p_y+2).x - type.r
+			if min_x < max_x:
+				p_x = rand_range(min_x, max_x)
+				p_y = (1 - p_y / (count_points - 1)) * size.y
+				matches = true
+				
+				var p = Vector2(p_x, p_y)
+				
+				for t in items:
+					if t.p.distance_to(p) <= t.r + type.r:
+						matches = false
+						break
+				
+			e += 1
+		
+		if e >= 1000:
+			break
+		
+		
+		var n = type.scene.instance()
+		add_child(n)
+		n.rotation = randf() * TAU
+		n.position = Vector2(p_x, p_y)
+		items.append(Pos.new(Vector2(p_x, p_y), type.r))
+		
+		if OS.get_ticks_usec() - TIME >= self.WORK_TIME:
+			yield(TREE, "idle_frame")
+			TIME = OS.get_ticks_usec()
+	emit_signal('end_gen')
+
+func prepear_probs(probs):
+	if '_sum' in probs:
+		return
+	var s = 0
+	for i in probs:
+		s += int(probs[i])
+	probs['_sum'] = s
+
+func get_rand(probs):
+	var s = randi() % probs['_sum']
+	for i in probs:
+		if i == '_sum':
+			continue
+		if s < probs[i]:
+			return i
+		else:
+			s -= probs[i]
