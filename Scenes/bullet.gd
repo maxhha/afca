@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const MAX_DIST = 2048
 const OBSTACLE_BIT = 16
-const SPEED = 1800*2
+var SPEED = 1800*2
 
 var damage = 1
 var linear_vel = Vector2()

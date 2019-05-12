@@ -1,29 +1,29 @@
 [gd_scene load_steps=18 format=2]
 
-[ext_resource path="res://Scenes/enemy2.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/enemy3.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
-[ext_resource path="res://Sprites/enemy_hard/en1.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/enemy_hard/en3.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/enemy_hard/en5.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/enemy_hard/en6.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/enemy_hard/en2.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/enemy_hard/en4.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/enemy_rocketman/1.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/enemy_rocketman/3.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/enemy_rocketman/5.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/enemy_rocketman/6.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_rocketman/2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_rocketman/4.png" type="Texture" id=8]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Sound/shoot3.wav" type="AudioStream" id=10]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=11]
 
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=1]
 radius = 25.5
 
-[sub_resource type="CircleShape2D" id=9]
+[sub_resource type="CircleShape2D" id=2]
 radius = 32.6324
 
-[sub_resource type="ShaderMaterial" id=10]
+[sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 2 )
 shader_param/k = 0.0
 shader_param/color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="SpriteFrames" id=11]
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 3 ) ],
 "loop": true,
@@ -51,26 +51,24 @@ animations = [ {
 "speed": 9.0
 } ]
 
-[sub_resource type="AudioStreamRandomPitch" id=6]
+[sub_resource type="AudioStreamRandomPitch" id=5]
 audio_stream = ExtResource( 10 )
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=6]
 radius = 603.488
 
 [node name="enemy" type="KinematicBody2D" groups=[
 "enemy",
 "unit",
 ]]
-z_index = 3
 collision_layer = 8
 script = ExtResource( 1 )
-MOVE_SPEED = 250.0
-ATTACK_TIMEOUT = 0.2
-MAX_HEALTH = 8
+ATTACK_DISTANCE = 550.0
+ATTACK_TIMEOUT = 0.9
 
 [node name="shape" type="CollisionShape2D" parent="."]
 position = Vector2( -0.0622559, -0.0717049 )
-shape = SubResource( 8 )
+shape = SubResource( 1 )
 
 [node name="hide_area" type="Area2D" parent="."]
 editor/display_folded = true
@@ -81,21 +79,21 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hide_area"]
 position = Vector2( 0.811874, -9.16259 )
-shape = SubResource( 9 )
+shape = SubResource( 2 )
 
 [node name="sprite" type="AnimatedSprite" parent="."]
-material = SubResource( 10 )
+material = SubResource( 3 )
 position = Vector2( 25.1059, -4.24701 )
 rotation = 1.5708
 scale = Vector2( 0.3, 0.3 )
-frames = SubResource( 11 )
+frames = SubResource( 4 )
 animation = "stand_up"
 frame = 1
 playing = true
 
 [node name="shoot1" parent="." instance=ExtResource( 9 )]
 position = Vector2( -0.87413, 9.09089 )
-stream = SubResource( 6 )
+stream = SubResource( 5 )
 volume_db = -6.0
 
 [node name="ray_walls" type="RayCast2D" parent="."]
@@ -103,14 +101,14 @@ position = Vector2( -0.87413, 9.09089 )
 collision_mask = 17
 
 [node name="view_area" type="Area2D" parent="."]
-editor/display_folded = true
 visible = false
+z_index = 3
 monitorable = false
 collision_layer = 0
-collision_mask = 2
+collision_mask = 64
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="view_area"]
-shape = SubResource( 7 )
+shape = SubResource( 6 )
 
 [node name="view" parent="." instance=ExtResource( 11 )]
 position = Vector2( -0.87413, 9.09089 )
@@ -126,4 +124,4 @@ fill = false
 always_show = false
 
 [node name="shoot_point" type="Position2D" parent="."]
-position = Vector2( 82.0453, 18.9335 )
+position = Vector2( 66.1013, 18.1031 )

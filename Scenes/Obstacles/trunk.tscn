@@ -24,6 +24,7 @@ block_propability = 0.5
 editor/display_folded = true
 position = Vector2( 0.800079, -11.8202 )
 scale = Vector2( 0.9, 0.9 )
+z_index = 2
 texture = ExtResource( 2 )
 
 [node name="glow" type="Sprite" parent="Sprite"]

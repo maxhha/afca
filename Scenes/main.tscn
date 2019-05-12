@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Sound/bg.ogg" type="AudioStream" id=7]
 [ext_resource path="res://Sprites/cursor/safe.png" type="Texture" id=8]
 [ext_resource path="res://Scenes/player.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Obstacles/bush.tscn" type="PackedScene" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 99.0
@@ -137,3 +138,6 @@ hframes = 2
 [node name="player" parent="." instance=ExtResource( 9 )]
 position = Vector2( 512.869, 336.623 )
 rotation = -1.57079
+
+[node name="bush" parent="." instance=ExtResource( 10 )]
+position = Vector2( 397.743, 74.6651 )

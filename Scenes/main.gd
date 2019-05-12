@@ -1,6 +1,6 @@
 extends Node2D
 
-var _chunk_path = ['chunk_start', 'forest_road', 
+var _chunk_path = ['chunk_start', 'forest_road', #'forest1', 
 	'gen1', 'gen1', 'gen1', 
 	'gen2', 'gen2', 'gen2', 'forest1', 'forest2','forest1', 'gen1', 'gen1']
 var _chunk_types = {}

@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 const SHOOT_RAND = PI/12
-const ATTACK_DISTANCE = 450
+export (float) var ATTACK_DISTANCE = 450
 export (float) var MOVE_SPEED = 400
 const HIDE_TIME = 0.2
 const HIDING_TIME_MIN = 1
@@ -31,6 +31,7 @@ var _damaged_timer = 0
 var timer = 0
 
 func _ready():
+	z_index = 3
 	health = MAX_HEALTH
 	$sprite.material = $sprite.material.duplicate()
 

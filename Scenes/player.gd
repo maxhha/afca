@@ -161,5 +161,5 @@ const DAMAGED_EFF_T = 0.2
 
 func get_damage(dmg):
 	self.health -= dmg
-	global.camera_shake(0.5)
+	global.camera_shake(0.5 if dmg < 2 else 1.0)
 	_damaged_timer = DAMAGED_EFF_T
