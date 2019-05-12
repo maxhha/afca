@@ -62,19 +62,23 @@ func _ready():
 	t["width"] = t["size"].x / 6
 	t["rand_delta"] = 50
 	
+	t["min_items"] = 0
+	t["max_items"] = 4
+	t["items_probs"] = {'grass':1}
+	
 	_chunk_types["forest_road"] = t
 	
 	t = _chunk_types["forest_road"].duplicate()
-	t["min_items"] = 0
-	t["max_items"] = 4
-	t["items_probs"] = {'trunk':2, 'bush':3}
+	t["min_items"] = 1
+	t["max_items"] = 6
+	t["items_probs"] = {'trunk':2, 'bush':3, 'grass':1}
 	
 	_chunk_types["gen1"] = t
 	
 	t = _chunk_types["gen1"].duplicate()
-	t["min_items"] = 2
-	t["max_items"] = 6
-	t["items_probs"] = {'trunk':2, 'bush':3, 'enemy_runner': 3}
+	t["min_items"] = 3
+	t["max_items"] = 7
+	t["items_probs"] = {'trunk':2, 'bush':3, 'enemy_runner': 3, 'grass':1}
 	
 	_chunk_types["gen2"] = t
 	

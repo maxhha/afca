@@ -21,6 +21,7 @@ class Item:
 		self.scene = scene
 
 var Items = {
+	'grass': Item.new(15, preload("res://Scenes/grass.tscn")),
 	'trunk': Item.new(160, preload("res://Scenes/Obstacles/trunk.tscn")),
 	'bush': Item.new(25, preload("res://Scenes/Obstacles/bush.tscn")),
 	'enemy_runner': Item.new(50, preload("res://Scenes/enemy1.tscn")),
