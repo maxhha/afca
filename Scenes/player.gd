@@ -1,11 +1,11 @@
 extends KinematicBody2D
 
-const SHOOT_RAND = PI/20
+const SHOOT_RAND = PI/40
 #const RUN_DISTANCE = 450
 #const ATTACK_DISTANCE = 325
 const MOVE_SPEED = 200
 const MIN_SPEED = 0.4
-const ATTACK_TIMEOUT = 1.0/5
+const ATTACK_TIMEOUT = 1.0/6
 #const STAND_TIME = 2
 #const STANDUP_TIMER = 0.3
 const BODY_ROTATE_SPEED = PI/4
@@ -137,7 +137,9 @@ func shoot():
 	b.global_position = shoot_points[current_sh_p].global_position
 	shoot_points[current_sh_p].get_node('snd').play()
 	current_sh_p = (current_sh_p + 1) % shoot_points.size()
-	$sprite/gun/sprite/anim.play('shoot')
+	var anim = $sprite/gun/sprite/anim
+
+	anim.play('shoot', -1, 0.2/ATTACK_TIMEOUT)
 
 func get_nearest_point_to(pos):
 	var d_min

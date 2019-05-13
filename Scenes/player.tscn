@@ -12,12 +12,12 @@
 radius = 43.9097
 height = 38.8728
 
-[sub_resource type="ShaderMaterial" id=10]
+[sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 2 )
 shader_param/k = null
 shader_param/color = Color( 1, 1, 1, 1 )
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=3]
 length = 0.2
 step = 0.01
 tracks/0/type = "value"
@@ -79,7 +79,7 @@ shape = SubResource( 1 )
 
 [node name="sprite" type="Sprite" parent="."]
 editor/display_folded = true
-material = SubResource( 10 )
+material = SubResource( 2 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 3 )
 offset = Vector2( 0, 3 )
@@ -105,7 +105,7 @@ texture = ExtResource( 6 )
 offset = Vector2( 48, 0 )
 
 [node name="anim" type="AnimationPlayer" parent="sprite/gun/sprite"]
-anims/shoot = SubResource( 11 )
+anims/shoot = SubResource( 3 )
 anims/stand = SubResource( 4 )
 
 [node name="shoot_points" type="Node2D" parent="sprite/gun"]

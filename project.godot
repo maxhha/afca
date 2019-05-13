@@ -73,6 +73,7 @@ music={
 2d_physics/layer_4="enemy"
 2d_physics/layer_5="obstacle"
 2d_physics/layer_6="big_walls"
+2d_physics/layer_7="player"
 
 [rendering]
 

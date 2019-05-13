@@ -6,7 +6,7 @@
 [ext_resource path="res://Sprites/rocket/3.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/rocket/4.png" type="Texture" id=5]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
 "loop": true,
@@ -14,7 +14,7 @@ animations = [ {
 "speed": 8.0
 } ]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=2]
 radius = 0.0732773
 
 [node name="bullet" type="KinematicBody2D"]
@@ -27,9 +27,9 @@ script = ExtResource( 1 )
 position = Vector2( -11.2607, 14.4229 )
 rotation = 1.5708
 scale = Vector2( 0.15, 0.15 )
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 frame = 1
 offset = Vector2( -96, 0 )
 
 [node name="shape" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource( 2 )

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Sprites/explosion/1.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/explosion/2.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/rocket_destroy.gd" type="Script" id=3]
+[ext_resource path="res://Sound/exp.wav" type="AudioStream" id=4]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -11,6 +12,9 @@ animations = [ {
 "name": "default",
 "speed": 0.0
 } ]
+
+[sub_resource type="AudioStreamRandomPitch" id=4]
+audio_stream = ExtResource( 4 )
 
 [sub_resource type="Animation" id=2]
 resource_name = "def"
@@ -50,13 +54,30 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Vector2( 0.1, 0.1 ), Vector2( 0.25, 0.25 ) ]
 }
+tracks/3/type = "audio"
+tracks/3/path = NodePath("exp")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"clips": [ {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": SubResource( 4 )
+} ],
+"times": PoolRealArray( 0 )
+}
 
 [node name="spr" type="AnimatedSprite"]
-scale = Vector2( 0.25, 0.25 )
-z_index = 1
+scale = Vector2( 0.1, 0.1 )
+z_index = 1024
 frames = SubResource( 1 )
-frame = 1
 script = ExtResource( 3 )
 
 [node name="anim" type="AnimationPlayer" parent="."]
 anims/def = SubResource( 2 )
+
+[node name="exp" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 4 )
+bus = "Sound"
