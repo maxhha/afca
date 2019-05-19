@@ -1,0 +1,92 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Chunks/forest1.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/boss.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Obstacles/wall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/enemy1.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/enemy2.tscn" type="PackedScene" id=5]
+
+[node name="walls" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="left" type="CollisionPolygon2D" parent="."]
+z_index = 1536
+polygon = PoolVector2Array( 0, 0, 0, 1300, 200, 1300, 200, 0 )
+
+[node name="right" type="CollisionPolygon2D" parent="."]
+position = Vector2( 250, 0 )
+z_index = 1536
+polygon = PoolVector2Array( 1024, 0, 1024, 1300, 870, 1300, 870, 0 )
+
+[node name="boss" parent="." instance=ExtResource( 2 )]
+position = Vector2( 683.541, 579.92 )
+rotation = 1.57079
+
+[node name="trunk" parent="." instance=ExtResource( 3 )]
+position = Vector2( 423.291, 835.586 )
+rotation = 0.261799
+
+[node name="trunk2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 925.989, 853.081 )
+rotation = 0.114345
+
+[node name="trunk5" parent="." instance=ExtResource( 3 )]
+position = Vector2( 763.866, 862.412 )
+rotation = 0.114345
+
+[node name="trunk3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 429.818, 690.981 )
+rotation = 0.0761003
+
+[node name="trunk4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 922.019, 688.648 )
+rotation = 0.151438
+
+[node name="enemy" parent="." instance=ExtResource( 4 )]
+position = Vector2( 387.134, 764.438 )
+rotation = 0.993359
+
+[node name="enemy2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 725.376, 799.429 )
+rotation = 0.523598
+
+[node name="enemy3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 881.667, 795.93 )
+rotation = 1.83259
+
+[node name="enemy4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 970.72, 612.554 )
+rotation = 1.309
+
+[node name="enemy5" parent="." instance=ExtResource( 4 )]
+position = Vector2( 891.409, 632.382 )
+rotation = 1.83259
+
+[node name="enemy6" parent="." instance=ExtResource( 4 )]
+position = Vector2( 419.036, 628.883 )
+rotation = 1.309
+
+[node name="enemy7" parent="." instance=ExtResource( 4 )]
+position = Vector2( 970.31, 784.266 )
+rotation = 1.57079
+
+[node name="enemy8" parent="." instance=ExtResource( 5 )]
+position = Vector2( 807.139, 777.664 )
+rotation = 1.62051
+
+[node name="enemy9" parent="." instance=ExtResource( 5 )]
+position = Vector2( 614.961, 843.574 )
+rotation = 1.62051
+
+[node name="enemy10" parent="." instance=ExtResource( 5 )]
+position = Vector2( 433.922, 178.593 )
+rotation = 2.09439
+
+[node name="enemy11" parent="." instance=ExtResource( 5 )]
+position = Vector2( 645.417, 72.4632 )
+rotation = 1.309
+
+[node name="enemy12" parent="." instance=ExtResource( 5 )]
+position = Vector2( 920.359, 168.173 )
+rotation = 1.309

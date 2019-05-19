@@ -1,11 +1,13 @@
 extends Node2D
  
-var _chunk_path = ['chunk_start', 'forest_road', #'forest1', 
-	'gen1', 'gen2', 'gen2',"forest_road", "gen3", "repear1",
-	'gen2', 'gen3', 'gen3',"forest_road", "gen3", "gen4", "repear2",
-	'gen3', 'gen4', "forest_road", "gen4", "gen5", "repear2",
-	'gen4', 'gen3', "forest_road", "gen3", "gen5", "repear3",
-	"gen6", "gen6", "gen6", "gen7", "gen7", "gen7", "gen7"
+var _chunk_path = ['chunk_start', 'forest_road', 
+	'gen1', 'gen2', 'gen3', 'gen2','gen3',"forest_road", "gen4","gen4", "repear1", 'forest_road', 
+	'gen2', 'gen3', 'gen3',"forest_road", "gen3", "gen4","gen4","gen4", "repear2", 'forest_road', 
+	'gen3', 'gen3', 'gen4','gen3', 'gen4', "forest_road", "forest_road", "gen5", "gen5","gen6", "repear2", 'forest_road', 
+	'gen4', 'gen3', 'gen3', 'gen3', "gen5", "gen5","gen6", "gen6", "repear3", 'forest_road', 
+	"gen6", "gen6", "gen5", "gen5", "gen7", "gen7",
+	"repear3",'forest_road',
+	'chunk_boss', 'forest_road', 'forest_road'
 	]
 var _chunk_types = {}
 var _connect_points = null
@@ -15,7 +17,8 @@ var _chunk_classes = {
 	"repear1": preload("res://Scenes/Chunks/repear1.tscn"),
 	"repear2": preload("res://Scenes/Chunks/repear2.tscn"),
 	"repear3": preload("res://Scenes/Chunks/repear3.tscn"),
-	"chunk_start": preload("res://Scenes/Chunks/chunk_start.tscn")
+	"chunk_start": preload("res://Scenes/Chunks/chunk_start.tscn"),
+	"chunk_boss": preload("res://Scenes/Chunks/chunk_boss.tscn")
 }
 
 #onready var player_units = $units.get_children()
@@ -41,14 +44,14 @@ var bg_grad_size = Vector2()
 var bg_grad_current = 0
 var bg_grad_offset_i = 0
 
-const BORDER_SIZE = 512
+const BORDER_SIZE = 1024
 
 func _ready():
 	$UI/progress.value = 0
 	$UI/progress.max_value = _chunk_path.size() - 2
 	Input.set_custom_mouse_cursor(preload("res://Sprites/cursor/target.png"), Input.CURSOR_ARROW, Vector2(32,32))
 	$UI/white_screen.show()
-	
+	$audio.play(global.bg_music_offset)
 	global.main = self
 	global.player = $player
 # warning-ignore:return_value_discarded
@@ -165,10 +168,11 @@ func _on_player_death():
 #	if player_units.size() == 0:
 #		emit_signal("game_over")
 
-const GAMEOVER_TIME = 1.5
+const GAMEOVER_TIME = 3
 var gameover_timer = 0
 
 func _on_game_over():
+	$audio.play(0.5)
 	gameover_timer = GAMEOVER_TIME
 
 func create_bg_grad(indx):
@@ -206,6 +210,7 @@ func _process(delta):
 		gameover_timer = max(gameover_timer - delta, 0)
 		$UI/white_screen.color.a = 1 - gameover_timer / GAMEOVER_TIME
 		if gameover_timer == 0:
+			global.bg_music_offset = $audio.get_playback_position()
 # warning-ignore:return_value_discarded
 			get_tree().reload_current_scene()
 	
@@ -218,6 +223,13 @@ func _process(delta):
 	if Input.is_action_just_pressed('music'):
 		var i = AudioServer.get_bus_index('Music')
 		AudioServer.set_bus_mute(i, not AudioServer.is_bus_mute(i))
+	
+	if can_reload and Input.is_action_pressed('click'):
+		global.bg_music_offset = $audio.get_playback_position()
+# warning-ignore:return_value_discarded
+		get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("exit"):
+		get_tree().quit()
 
 func get_hiding_point(pos, offset):
 	var hide_areas = cursor.get_node('hide_area').get_overlapping_areas()
@@ -286,8 +298,14 @@ func get_next_chunk():
 		var type = fallback_type
 		if _chunk_path.size() > 0:
 			type = _chunk_path.pop_front()
+#			print(type)
 			$UI/progress.value = max(0, $UI/progress.max_value - _chunk_path.size())
-		
+		else:
+			if not $UI/end_game/anim.is_playing() and not can_reload:
+				$audio.play(0.5)
+				$UI/end_game/anim.play("show")
+# warning-ignore:return_value_discarded
+				$UI/end_game/anim.connect("animation_finished", self, "_on_finish_game")
 		_next_chunk = create_chunk(type)
 	
 	var g = _next_chunk
@@ -298,7 +316,13 @@ func get_next_chunk():
 	
 	_connect_points = g.finish_points
 	return g
-	
+
+var can_reload = false
+
+# warning-ignore:unused_argument
+func _on_finish_game(a):
+	can_reload = true
+
 func create_chunk(type, finish_points=null):
 	var t
 	var c

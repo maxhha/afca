@@ -4,10 +4,10 @@
 [ext_resource path="res://Scripts/color.shader" type="Shader" id=2]
 [ext_resource path="res://Sprites/enemy_rocketman/1.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/enemy_rocketman/6.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/enemy_rocketman/2.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/enemy_rocketman/4.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/enemy_rocketman/3.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/enemy_rocketman/5.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/enemy_rocketman/3.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/enemy_rocketman/5.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/enemy_rocketman/2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/enemy_rocketman/4.png" type="Texture" id=8]
 [ext_resource path="res://Sound/shoot1.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Sound/noise.wav" type="AudioStream" id=10]
 [ext_resource path="res://Scripts/circle.tscn" type="PackedScene" id=11]
@@ -30,6 +30,11 @@ animations = [ {
 "name": "stand_up",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 6 ), ExtResource( 3 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "hiding",
+"speed": 3.0
+}, {
 "frames": [ ExtResource( 4 ), ExtResource( 3 ) ],
 "loop": false,
 "name": "stand_down",
@@ -40,15 +45,10 @@ animations = [ {
 "name": "stand",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 5 ), ExtResource( 3 ), ExtResource( 6 ) ],
+"frames": [ ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 8 ) ],
 "loop": true,
 "name": "run",
 "speed": 9.0
-}, {
-"frames": [ ExtResource( 3 ), ExtResource( 3 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 8 ), ExtResource( 3 ), ExtResource( 3 ) ],
-"loop": true,
-"name": "hiding",
-"speed": 3.0
 } ]
 
 [sub_resource type="AudioStreamRandomPitch" id=5]
@@ -58,8 +58,8 @@ audio_stream = ExtResource( 10 )
 radius = 603.488
 
 [node name="enemy" type="KinematicBody2D" groups=[
-"unit",
 "enemy",
+"unit",
 ]]
 collision_layer = 8
 script = ExtResource( 1 )

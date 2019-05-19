@@ -328,7 +328,7 @@ func place_items(count, probs, TREE):
 		
 		var n = type.scene.instance()
 		add_child(n)
-		n.rotation = randf() * TAU
+		n.rotation = (randf()*2 - 1) * TAU / 6
 		n.position = Vector2(p_x, p_y)
 		items.append(Pos.new(Vector2(p_x, p_y), type.r))
 		

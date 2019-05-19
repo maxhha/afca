@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Scenes/main.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/pointer.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Sprites/cursor/safe.png" type="Texture" id=8]
 [ext_resource path="res://Scenes/player.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Roboto-Black.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://Roboto-Italic.ttf" type="DynamicFontData" id=11]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 99.0
@@ -24,10 +25,86 @@ bg_color = Color( 0.6, 0.564706, 0.141176, 1 )
 size = 32
 font_data = ExtResource( 10 )
 
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 1024, 10 )
+[sub_resource type="DynamicFont" id=5]
+size = 64
+font_data = ExtResource( 10 )
 
 [sub_resource type="DynamicFont" id=6]
+size = 48
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 32
+font_data = ExtResource( 11 )
+
+[sub_resource type="Animation" id=8]
+resource_name = "show"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("lbl1:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2, 3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.105882, 0.105882, 0.105882, 0 ), Color( 0.105882, 0.105882, 0.105882, 0 ), Color( 0.105882, 0.105882, 0.105882, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("lbl2:custom_colors/font_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 2.5, 3.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.25098, 0.25098, 0.376471, 0 ), Color( 0.25098, 0.25098, 0.376471, 0 ), Color( 0.25098, 0.25098, 0.376471, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("lbl3:custom_colors/font_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3.5, 4.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.14902, 0.184314, 0.431373, 0 ), Color( 0.14902, 0.184314, 0.431373, 0 ), Color( 0.14902, 0.184314, 0.431373, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("lbl4:custom_colors/font_color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 4.5, 5 ),
+"transitions": PoolRealArray( 0.267943, 0.267943, 1 ),
+"update": 0,
+"values": [ Color( 0.25098, 0.25098, 0.376471, 0 ), Color( 0.25098, 0.25098, 0.376471, 0 ), Color( 0.25098, 0.25098, 0.376471, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../white_screen:color")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 1024, 10 )
+
+[sub_resource type="DynamicFont" id=10]
 size = 64
 font_data = ExtResource( 10 )
 
@@ -59,6 +136,7 @@ fill = false
 always_show = true
 
 [node name="units" type="Node2D" parent="."]
+editor/display_folded = true
 z_index = 16
 
 [node name="unit" parent="units" instance=ExtResource( 4 )]
@@ -112,6 +190,7 @@ collision_mask = 8
 shape = SubResource( 1 )
 
 [node name="camera_control" type="Node2D" parent="."]
+editor/display_folded = true
 position = Vector2( 515.12, 298.875 )
 script = ExtResource( 6 )
 
@@ -158,7 +237,6 @@ value = 10.0
 percent_visible = false
 
 [node name="white_screen" type="ColorRect" parent="UI"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -0.418091
@@ -191,9 +269,8 @@ margin_top = 7.46111
 margin_right = -17.1235
 margin_bottom = 127.461
 custom_fonts/font = SubResource( 4 )
-text = "/\\
-You can make it fullscreen | |
-"
+text = "
+Press Esc to exit"
 align = 2
 
 [node name="label3" type="Label" parent="UI/control"]
@@ -230,7 +307,72 @@ text = "/\\
  | progress
 "
 
+[node name="end_game" type="Control" parent="UI"]
+editor/display_folded = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="lbl1" type="Label" parent="UI/end_game"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -78.5
+margin_top = -236.28
+margin_right = 78.5
+margin_bottom = -160.28
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.105882, 0.105882, 0.105882, 0 )
+text = "Part I"
+align = 1
+
+[node name="lbl2" type="Label" parent="UI/end_game"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -116.334
+margin_top = -177.962
+margin_right = 118.666
+margin_bottom = -101.962
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0.25098, 0.25098, 0.376471, 0 )
+text = "finished"
+align = 1
+
+[node name="lbl3" type="Label" parent="UI/end_game"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -270.5
+margin_top = -38.0
+margin_right = 288.5
+margin_bottom = 38.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.14902, 0.184314, 0.431373, 0 )
+text = "Thanks for playing!"
+align = 1
+
+[node name="lbl4" type="Label" parent="UI/end_game"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -370.5
+margin_top = 243.734
+margin_right = 370.5
+margin_bottom = 319.734
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 0.25098, 0.25098, 0.376471, 0 )
+text = "made by max_hha and yorshdev for ToxicGameJam"
+align = 1
+
+[node name="anim" type="AnimationPlayer" parent="UI/end_game"]
+anims/show = SubResource( 8 )
+
 [node name="wall" type="StaticBody2D" parent="."]
+editor/display_folded = true
 position = Vector2( -32.8088, 555.699 )
 z_index = 1024
 collision_layer = 32
@@ -238,12 +380,12 @@ collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall"]
 position = Vector2( 526.991, -8.20221 )
-shape = SubResource( 5 )
+shape = SubResource( 9 )
 
 [node name="Label" type="Label" parent="wall"]
 margin_left = 140.647
 margin_top = 290.085
 margin_right = 930.647
 margin_bottom = 366.085
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 10 )
 text = "Отступают только трусы!"

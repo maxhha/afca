@@ -129,7 +129,6 @@ volume_db = -2.167
 bus = "Sound"
 
 [node name="units_poses" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="p1" type="Position2D" parent="units_poses"]
 position = Vector2( 66.0481, -35.8648 )
@@ -169,6 +168,84 @@ position = Vector2( -25.0741, -64.1761 )
 
 [node name="p11" type="Position2D" parent="units_poses"]
 position = Vector2( -25.5493, 56.8994 )
+
+[node name="p15" type="Position2D" parent="units_poses"]
+position = Vector2( -12.8592, 75.1607 )
+
+[node name="p16" type="Position2D" parent="units_poses"]
+position = Vector2( -11.0022, -80.2152 )
+
+[node name="p17" type="Position2D" parent="units_poses"]
+position = Vector2( 17.7826, -77.4296 )
+
+[node name="p18" type="Position2D" parent="units_poses"]
+position = Vector2( 15.9255, 77.3273 )
+
+[node name="p19" type="Position2D" parent="units_poses"]
+position = Vector2( 46.8769, -71.5488 )
+
+[node name="p20" type="Position2D" parent="units_poses"]
+position = Vector2( 41.3056, 73.9226 )
+
+[node name="p21" type="Position2D" parent="units_poses"]
+position = Vector2( 62.043, 64.3277 )
+
+[node name="p24" type="Position2D" parent="units_poses"]
+position = Vector2( 69.4714, -62.5729 )
+
+[node name="p25" type="Position2D" parent="units_poses"]
+position = Vector2( 83.3995, -46.7877 )
+
+[node name="p28" type="Position2D" parent="units_poses"]
+position = Vector2( 79.6853, 51.9471 )
+
+[node name="p29" type="Position2D" parent="units_poses"]
+position = Vector2( 98, 34 )
+
+[node name="p31" type="Position2D" parent="units_poses"]
+position = Vector2( 100.786, -31.6169 )
+
+[node name="p33" type="Position2D" parent="units_poses"]
+position = Vector2( 116.261, -12.1175 )
+
+[node name="p36" type="Position2D" parent="units_poses"]
+position = Vector2( 116.261, 15.1197 )
+
+[node name="p38" type="Position2D" parent="units_poses"]
+position = Vector2( 70.7628, 0.263015 )
+
+[node name="p40" type="Position2D" parent="units_poses"]
+position = Vector2( 67.3582, 18.5243 )
+
+[node name="p22" type="Position2D" parent="units_poses"]
+position = Vector2( 62.043, 64.3277 )
+
+[node name="p23" type="Position2D" parent="units_poses"]
+position = Vector2( 69.4714, -62.5729 )
+
+[node name="p26" type="Position2D" parent="units_poses"]
+position = Vector2( 83.3995, -46.7877 )
+
+[node name="p27" type="Position2D" parent="units_poses"]
+position = Vector2( 79.6853, 51.9471 )
+
+[node name="p30" type="Position2D" parent="units_poses"]
+position = Vector2( 98, 34 )
+
+[node name="p32" type="Position2D" parent="units_poses"]
+position = Vector2( 100.786, -31.6169 )
+
+[node name="p34" type="Position2D" parent="units_poses"]
+position = Vector2( 116.261, -12.1175 )
+
+[node name="p35" type="Position2D" parent="units_poses"]
+position = Vector2( 116.261, 15.1197 )
+
+[node name="p37" type="Position2D" parent="units_poses"]
+position = Vector2( 63.644, -15.2127 )
+
+[node name="p39" type="Position2D" parent="units_poses"]
+position = Vector2( 132.666, 0.572524 )
 
 [node name="hide_area" type="Area2D" parent="."]
 visible = false

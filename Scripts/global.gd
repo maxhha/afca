@@ -9,6 +9,9 @@ var player_units = []
 var player = null
 var main
 
+# warning-ignore:unused_class_variable
+var bg_music_offset = 0
+
 func camera_shake(pwr):
 	if main:
 		main.camera_shake(pwr)
